@@ -55,7 +55,10 @@ function parsePhonetic(phonetic) {
   if (!str) return []
 
   // 标准化非标准 IPA 变体
-  str = str.replace(/əu/g, 'əʊ')  // NCE_1 uses əu for GOAT vowel
+  str = str.replace(/əu/g, 'oʊ')     // NCE_1 uses əu for GOAT vowel → oʊ
+  str = str.replace(/ε/g, 'ɛ')        // Greek epsilon → IPA epsilon
+  str = str.replace(/\u02B3/g, '')     // ʳ (superscript r) → remove
+  str = str.replace(/\u200B/g, '')     // zero-width space → remove
 
   var result = []
   var i = 0
