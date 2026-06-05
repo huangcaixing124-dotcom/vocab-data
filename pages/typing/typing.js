@@ -360,20 +360,27 @@ Page({
 
     this.setData({ isWordFinished: true })
 
-    // 播放发音
+    // 播放发音，播完后再切下一个单词
     const pronConfig = app.globalData.pronunciationConfig
+    var that = this
+    var goNext = function () {
+      that._setupCurrentWord(currentLoopCount < loopTimes ? currentIndex : currentIndex + 1)
+    }
+
     if (pronConfig && pronConfig.isOpen) {
-      playPronunciation(currentWord.name, pronConfig.type || 'us', null, {
+      playPronunciation(currentWord.name, pronConfig.type || 'us', goNext, {
         rate: pronConfig.rate || 1,
         loop: false,
       })
-    }
-
-    // 播放中文释义朗读
-    if (pronConfig && pronConfig.isTransRead && currentWord.trans && currentWord.trans.length > 0) {
-      setTimeout(() => {
-        playTranslation(currentWord.trans[0])
-      }, 500)
+      // 播放中文释义朗读（发音开始后 500ms）
+      if (pronConfig.isTransRead && currentWord.trans && currentWord.trans.length > 0) {
+        setTimeout(function () {
+          playTranslation(currentWord.trans[0])
+        }, 500)
+      }
+    } else {
+      // 无发音时用短暂延迟
+      setTimeout(goNext, 300)
     }
 
     // 保存单词记录
@@ -406,16 +413,7 @@ Page({
     loopCountMap[currentIndex] = currentLoopCount
     this.setData({ loopCountMap })
 
-    const delay = 300
-    setTimeout(() => {
-      if (currentLoopCount < loopTimes) {
-        // 还需要循环，重新练习当前单词
-        this._setupCurrentWord(currentIndex)
-      } else {
-        // 循环完成，进入下一个单词
-        this._setupCurrentWord(currentIndex + 1)
-      }
-    }, delay)
+    // 注意：goNext 回调会在发音结束后自动调用，此处不需要 setTimeout
   },
 
   /**
