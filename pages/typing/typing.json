@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "打字练习",
+  "usingComponents": {
+    "virtual-keyboard": "/components/virtual-keyboard/virtual-keyboard",
+    "word-panel": "/components/word-panel/word-panel",
+    "progress-bar": "/components/progress-bar/progress-bar",
+    "result-screen": "/components/result-screen/result-screen"
+  }
+}

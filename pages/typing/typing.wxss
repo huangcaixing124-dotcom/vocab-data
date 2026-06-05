@@ -1,0 +1,94 @@
+/* 打字练习页样式 */
+
+.typing-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: var(--bg-primary);
+}
+
+/* 顶部信息栏 */
+.header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 30rpx;
+  background: var(--bg-secondary);
+  border-bottom: 1rpx solid var(--border);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.dict-label {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--accent-primary);
+}
+
+.chapter-label {
+  font-size: 24rpx;
+  color: var(--text-muted);
+}
+
+.timer {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: 'SF Mono', monospace;
+}
+
+/* 练习内容区域 */
+.typing-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+/* 统计信息 */
+.typing-stats {
+  display: flex;
+  justify-content: center;
+  gap: 60rpx;
+  padding: 10rpx 0 20rpx;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-num {
+  font-size: 36rpx;
+  font-weight: 700;
+}
+
+.stat-name {
+  font-size: 22rpx;
+  color: var(--text-muted);
+  margin-top: 4rpx;
+}
+
+/* 跳过区域 */
+.skip-area {
+  display: flex;
+  justify-content: center;
+  padding: 10rpx 0 20rpx;
+  animation: fadeIn 0.3s ease;
+}
+
+/* 加载 */
+.loading {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 30rpx;
+}

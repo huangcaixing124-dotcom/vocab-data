@@ -1,0 +1,231 @@
+/**
+ * Qwerty-Learner 全局样式
+ * 支持深色/浅色主题，参照原版设计
+ */
+
+/* ============ 深色主题（默认） ============ */
+page {
+  --bg-primary: #0f0f23;
+  --bg-secondary: #1a1a2e;
+  --bg-tertiary: #16213e;
+  --bg-card: #1e1e3a;
+  --text-primary: #e2e8f0;
+  --text-secondary: #a0aec0;
+  --text-muted: #718096;
+  --accent-primary: #667eea;
+  --accent-secondary: #764ba2;
+  --success: #48bb78;
+  --danger: #fc8181;
+  --warning: #f6ad55;
+  --border: rgba(255, 255, 255, 0.08);
+
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  font-size: 28rpx;
+  line-height: 1.5;
+}
+
+/* ============ 浅色主题 ============ */
+.theme-light {
+  --bg-primary: #f7f8fc;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #edf0f7;
+  --bg-card: #ffffff;
+  --text-primary: #1a202c;
+  --text-secondary: #4a5568;
+  --text-muted: #a0aec0;
+  --accent-primary: #667eea;
+  --accent-secondary: #764ba2;
+  --success: #38a169;
+  --danger: #e53e3e;
+  --warning: #dd6b20;
+  --border: rgba(0, 0, 0, 0.08);
+}
+
+/* ============ 通用工具类 ============ */
+.container {
+  padding: 30rpx;
+  box-sizing: border-box;
+}
+
+.card {
+  background: var(--bg-card);
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  border: 1rpx solid var(--border);
+}
+
+.text-primary { color: var(--text-primary); }
+.text-secondary { color: var(--text-secondary); }
+.text-muted { color: var(--text-muted); }
+.text-accent { color: var(--accent-primary); }
+.text-success { color: var(--success); }
+.text-danger { color: var(--danger); }
+
+.text-center { text-align: center; }
+.text-bold { font-weight: 600; }
+
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.flex-row { flex-direction: row; }
+.flex-wrap { flex-wrap: wrap; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.gap-sm { gap: 10rpx; }
+.gap-md { gap: 20rpx; }
+.gap-lg { gap: 30rpx; }
+.flex-1 { flex: 1; }
+
+.mt-sm { margin-top: 10rpx; }
+.mt-md { margin-top: 20rpx; }
+.mt-lg { margin-top: 30rpx; }
+.mb-sm { margin-bottom: 10rpx; }
+.mb-md { margin-bottom: 20rpx; }
+.mb-lg { margin-bottom: 30rpx; }
+
+/* ============ 按钮 ============ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16rpx 32rpx;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  border: none;
+  transition: opacity 0.2s;
+}
+
+.btn::after {
+  border: none;
+}
+
+.btn:active {
+  opacity: 0.8;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  color: #fff;
+}
+
+.btn-secondary {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1rpx solid var(--border);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.btn-sm {
+  padding: 10rpx 20rpx;
+  font-size: 24rpx;
+}
+
+.btn-lg {
+  padding: 24rpx 48rpx;
+  font-size: 32rpx;
+}
+
+.btn-block {
+  display: flex;
+  width: 100%;
+}
+
+/* ============ 输入 ============ */
+.input {
+  background: var(--bg-tertiary);
+  border: 1rpx solid var(--border);
+  border-radius: 12rpx;
+  padding: 16rpx 24rpx;
+  color: var(--text-primary);
+  font-size: 28rpx;
+}
+
+/* ============ 标签 ============ */
+.tag {
+  display: inline-flex;
+  padding: 6rpx 16rpx;
+  border-radius: 8rpx;
+  font-size: 22rpx;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border: 1rpx solid var(--border);
+}
+
+.tag-active {
+  background: var(--accent-primary);
+  color: #fff;
+  border-color: var(--accent-primary);
+}
+
+/* ============ 进度条 ============ */
+.progress-bar {
+  height: 8rpx;
+  background: var(--bg-tertiary);
+  border-radius: 4rpx;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+  border-radius: 4rpx;
+  transition: width 0.3s ease;
+}
+
+/* ============ 加载状态 ============ */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60rpx;
+  color: var(--text-muted);
+}
+
+/* ============ 空状态 ============ */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80rpx 40rpx;
+  color: var(--text-muted);
+  font-size: 28rpx;
+}
+
+/* ============ 分割线 ============ */
+.divider {
+  height: 1rpx;
+  background: var(--border);
+  margin: 20rpx 0;
+}
+
+/* ============ 遮罩 ============ */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  background: var(--bg-secondary);
+  border-radius: 24rpx;
+  padding: 40rpx;
+  width: 80%;
+  max-width: 600rpx;
+  border: 1rpx solid var(--border);
+}

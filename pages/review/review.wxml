@@ -1,0 +1,80 @@
+<!-- 复习练习页 -->
+<view class="review-page {{themeClass}}">
+  <view class="header-bar">
+    <view class="header-left">
+      <text class="dict-label">错词复习</text>
+    </view>
+    <view class="header-right">
+      <text class="timer">{{formattedTime}}</text>
+    </view>
+  </view>
+
+  <view class="loading" wx:if="{{isLoading}}">
+    <text>加载中...</text>
+  </view>
+
+  <view class="typing-content" wx:if="{{!isLoading && !isFinished}}">
+    <progress-bar current="{{currentIndex}}" total="{{words.length}}" />
+
+    <word-panel
+      word="{{currentWord}}"
+      inputWord="{{inputWord}}"
+      letterStates="{{letterStates}}"
+      hasWrong="{{hasWrong}}"
+      isFinished="{{isWordFinished}}"
+      phoneticType="{{phoneticType}}"
+      showPhonetic="{{showPhonetic}}"
+      showTranslation="{{showTranslation}}"
+      prevWord="{{prevWord}}"
+      nextWord="{{nextWord}}"
+      showPrevNext="{{true}}"
+      dictationMode="none"
+      randomLetterVisible="{{[]}}"
+      fontSize="{{wordFontSize}}"
+      bind:playSound="onPlaySound"
+      bind:playPhoneme="onPlayPhoneme"
+      bind:playSentence="onPlaySentence"
+    />
+
+    <view class="typing-stats">
+      <view class="stat">
+        <text class="stat-num text-success">{{correctCount}}</text>
+        <text class="stat-name">正确</text>
+      </view>
+      <view class="stat">
+        <text class="stat-num text-danger">{{wrongCount}}</text>
+        <text class="stat-name">错误</text>
+      </view>
+    </view>
+
+    <view class="skip-area" wx:if="{{isShowSkip}}">
+      <view class="btn btn-secondary btn-sm" bind:tap="onSkipWord">
+        <text>跳过此词 →</text>
+      </view>
+    </view>
+
+    <virtual-keyboard
+      expectedLetter="{{currentWord.name[inputWord.length] || ''}}"
+      inputLetters="{{inputLetters}}"
+      hasWrong="{{hasWrong}}"
+      disabled="{{isWordFinished || isLoading}}"
+      bind:input="onKeyInput"
+    />
+  </view>
+
+  <result-screen
+    visible="{{isFinished}}"
+    time="{{time}}"
+    correctCount="{{correctCount}}"
+    wrongCount="{{wrongCount}}"
+    wordCount="{{wordCount}}"
+    correctWordIndexes="{{correctWordIndexes}}"
+    wordNumber="{{words.length}}"
+    dictName="错词复习"
+    chapter="{{0}}"
+    hasNextChapter="{{false}}"
+    bind:nextChapter="onRestartReview"
+    bind:reviewChapter="onRestartReview"
+    bind:backToGallery="onBackToGallery"
+  />
+</view>

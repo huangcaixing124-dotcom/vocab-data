@@ -1,0 +1,316 @@
+/* 单词面板样式 */
+
+.word-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40rpx 30rpx;
+  min-height: 350rpx;
+  justify-content: center;
+}
+
+/* 前后单词 */
+.prev-word,
+.next-word {
+  padding: 10rpx 0;
+  opacity: 0.3;
+}
+
+.prev-word-text,
+.next-word-text {
+  font-size: 26rpx;
+  color: var(--text-muted);
+  letter-spacing: 4rpx;
+}
+
+/* 单词主体 */
+.word-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16rpx 0;
+}
+
+/* 音标行 */
+.phonetic-row {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 20rpx;
+}
+
+/* 音素容器 */
+.phonemes-container {
+  display: flex;
+  align-items: baseline;
+  gap: 2rpx;
+  font-size: 30rpx;
+  font-style: italic;
+}
+
+/* 音标斜杠 */
+.phoneme-slash {
+  color: var(--text-muted);
+  font-size: 28rpx;
+  margin: 0 4rpx;
+}
+
+/* 单个音素（可点击） */
+.phoneme {
+  padding: 4rpx 2rpx;
+  border-radius: 6rpx;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 30rpx;
+}
+
+.phoneme:active {
+  opacity: 0.7;
+  transform: scale(0.95);
+}
+
+/* 短元音 - 红色 */
+.phoneme-short-vowel {
+  color: #ff6b6b;
+  font-weight: 600;
+}
+
+/* 长元音 - 绿色 */
+.phoneme-long-vowel {
+  color: #51cf66;
+  font-weight: 600;
+}
+
+/* 双元音 - 蓝色 */
+.phoneme-diphthong {
+  color: #339af0;
+  font-weight: 600;
+}
+
+/* 辅音 - 默认色 */
+.phoneme-consonant {
+  color: var(--text-secondary);
+}
+
+/* 重音符号 - 黄色 */
+.phoneme-stress {
+  color: #fcc419;
+  font-weight: 700;
+}
+
+.sound-btn {
+  width: 56rpx;
+  height: 56rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--bg-tertiary);
+}
+
+.sound-btn:active {
+  opacity: 0.7;
+}
+
+.sound-icon {
+  font-size: 28rpx;
+}
+
+/* 字母容器 */
+.letters-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6rpx;
+}
+
+/* 单个字母 */
+.letter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 48rpx;
+  padding: 8rpx 4rpx;
+  position: relative;
+}
+
+.letter-char {
+  font-size: 56rpx;
+  font-weight: 600;
+  color: var(--text-muted);
+  font-family: 'SF Mono', 'Consolas', 'Courier New', monospace;
+  transition: color 0.2s;
+  letter-spacing: 4rpx;
+}
+
+/* 正确字母 */
+.letter-correct .letter-char {
+  color: var(--success);
+}
+
+/* 错误字母 */
+.letter-wrong .letter-char {
+  color: var(--danger);
+  animation: shake 0.3s ease;
+}
+
+/* 当前输入位置 */
+.letter-current {
+  position: relative;
+}
+
+.letter-underline {
+  width: 36rpx;
+  height: 4rpx;
+  background: var(--accent-primary);
+  border-radius: 2rpx;
+  margin-top: 4rpx;
+  animation: blink 1s infinite;
+}
+
+/* 隐藏字母（默写模式） */
+.letter-hidden .letter-char {
+  color: transparent;
+}
+
+.letter-hidden .letter-underline {
+  background: var(--text-muted);
+}
+
+/* 错误提示 */
+.wrong-hint {
+  margin-top: 16rpx;
+  padding: 8rpx 24rpx;
+  background: rgba(252, 129, 129, 0.1);
+  border-radius: 8rpx;
+}
+
+.wrong-hint-text {
+  font-size: 24rpx;
+  color: var(--danger);
+}
+
+/* 完成标记 */
+.finished-check {
+  margin-top: 16rpx;
+  animation: popIn 0.3s ease;
+}
+
+.finished-icon {
+  font-size: 48rpx;
+  color: var(--success);
+}
+
+/* 单词完成动画 */
+.letters-complete {
+  animation: wordDone 0.4s ease forwards;
+}
+
+@keyframes wordDone {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.04); }
+  100% { transform: scale(1); opacity: 0.5; }
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.5); opacity: 0; }
+  60% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* 释义 */
+.translation {
+  margin-top: 24rpx;
+  padding: 0 40rpx;
+  text-align: center;
+}
+
+.translation-text {
+  font-size: 28rpx;
+  color: var(--text-secondary);
+}
+
+/* Example sentence */
+.sentence-row {
+  margin-top: 28rpx;
+  margin-bottom: 20rpx;
+  padding: 16rpx 24rpx;
+  background: var(--bg-tertiary);
+  border-radius: 12rpx;
+  max-width: 90%;
+  width: 100%;
+}
+
+.sentence-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.sentence-en-row {
+  display: flex;
+  align-items: center;
+  font-size: 22rpx;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.sentence-quote {
+  color: var(--text-muted);
+  font-size: 24rpx;
+  opacity: 0.6;
+}
+
+.sentence-normal {
+  color: var(--text-muted);
+  font-size: 22rpx;
+}
+
+.sentence-hl {
+  color: var(--accent-primary);
+  font-weight: 600;
+  font-size: 22rpx;
+}
+
+.sentence-play-btn {
+  flex-shrink: 0;
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(102, 126, 234, 0.15);
+}
+
+.sentence-play-btn:active {
+  opacity: 0.7;
+}
+
+.sentence-play-icon {
+  font-size: 24rpx;
+}
+
+.sentence-cn {
+  margin-top: 8rpx;
+  font-size: 20rpx;
+  color: var(--text-muted);
+  opacity: 0.75;
+  line-height: 1.5;
+  display: block;
+  width: 100%;
+}
+
+/* 动画 */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-6rpx); }
+  50% { transform: translateX(6rpx); }
+  75% { transform: translateX(-6rpx); }
+  100% { transform: translateX(0); }
+}

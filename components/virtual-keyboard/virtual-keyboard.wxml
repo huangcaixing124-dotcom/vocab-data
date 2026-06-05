@@ -1,0 +1,33 @@
+<!-- 虚拟 QWERTY 键盘 -->
+<view class="keyboard" wx:if="{{!disabled}}">
+  <!-- 字母键行 -->
+  <view class="keyboard-row" wx:for="{{rows}}" wx:key="index" wx:for-item="row">
+    <view
+      class="key {{pressedKey === key ? 'key-pressed' : ''}} {{expectedLetter === key ? 'key-hint' : ''}} {{feedbackKey === key && feedbackType === 'correct' ? 'key-correct' : ''}} {{feedbackKey === key && feedbackType === 'wrong' ? 'key-wrong' : ''}}"
+      wx:for="{{row}}"
+      wx:key="*this"
+      wx:for-item="key"
+      data-key="{{key}}"
+      bind:tap="onKeyTap"
+      bind:touchstart="onKeyTouchStart"
+      bind:touchend="onKeyTouchEnd"
+      bind:touchcancel="onKeyTouchEnd"
+    >
+      <text class="key-text">{{key}}</text>
+    </view>
+  </view>
+
+  <!-- 空格键 -->
+  <view class="keyboard-row keyboard-row-bottom">
+    <view
+      class="key key-space {{pressedKey === ' ' ? 'key-pressed' : ''}}"
+      data-key=" "
+      bind:tap="onSpaceTap"
+      bind:touchstart="onKeyTouchStart"
+      bind:touchend="onKeyTouchEnd"
+      bind:touchcancel="onKeyTouchEnd"
+    >
+      <text class="key-text">空格</text>
+    </view>
+  </view>
+</view>

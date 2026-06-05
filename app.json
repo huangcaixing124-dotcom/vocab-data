@@ -1,0 +1,52 @@
+{
+  "pages": [
+    "pages/typing/typing",
+    "pages/gallery/gallery",
+    "pages/error-book/error-book",
+    "pages/analysis/analysis",
+    "pages/settings/settings",
+    "pages/dict-detail/dict-detail",
+    "pages/review/review"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#1a1a2e",
+    "navigationBarTitleText": "键词达人",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#0f0f23",
+    "backgroundTextStyle": "light"
+  },
+  "tabBar": {
+    "color": "#8b8b9e",
+    "selectedColor": "#667eea",
+    "backgroundColor": "#1a1a2e",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/gallery/gallery",
+        "text": "词典",
+        "iconPath": "assets/images/icon-dict.png",
+        "selectedIconPath": "assets/images/icon-dict-active.png"
+      },
+      {
+        "pagePath": "pages/typing/typing",
+        "text": "练习",
+        "iconPath": "assets/images/icon-type.png",
+        "selectedIconPath": "assets/images/icon-type-active.png"
+      },
+      {
+        "pagePath": "pages/error-book/error-book",
+        "text": "错题",
+        "iconPath": "assets/images/icon-error.png",
+        "selectedIconPath": "assets/images/icon-error-active.png"
+      },
+      {
+        "pagePath": "pages/settings/settings",
+        "text": "设置",
+        "iconPath": "assets/images/icon-settings.png",
+        "selectedIconPath": "assets/images/icon-settings-active.png"
+      }
+    ]
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2"
+}

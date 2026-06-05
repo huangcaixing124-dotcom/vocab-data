@@ -1,0 +1,44 @@
+<!-- 章节完成结果页 -->
+<view class="result-screen" wx:if="{{visible}}">
+  <view class="result-card">
+    <!-- 头部 -->
+    <view class="result-header">
+      <text class="result-emoji">🎉</text>
+      <text class="result-title">章节完成！</text>
+      <text class="result-subtitle">{{dictName}} · 第 {{chapter + 1}} 章</text>
+    </view>
+
+    <!-- 统计数据 -->
+    <view class="stats-grid">
+      <view class="stat-item">
+        <text class="stat-value">{{formattedTime}}</text>
+        <text class="stat-label">用时</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{accuracy}}%</text>
+        <text class="stat-label">正确率</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{wpm}}</text>
+        <text class="stat-label">WPM</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{correctWordIndexes.length}}/{{wordNumber}}</text>
+        <text class="stat-label">全对单词</text>
+      </view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="result-actions">
+      <view class="btn btn-primary btn-block" wx:if="{{hasNextChapter}}" bind:tap="onNextChapter">
+        <text>下一章</text>
+      </view>
+      <view class="btn btn-secondary btn-block" bind:tap="onReviewChapter">
+        <text>复习本章</text>
+      </view>
+      <view class="btn btn-ghost btn-block" bind:tap="onBackToGallery">
+        <text>返回词典</text>
+      </view>
+    </view>
+  </view>
+</view>

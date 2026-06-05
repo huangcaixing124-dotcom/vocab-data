@@ -1,0 +1,154 @@
+/* 词典详情页样式 */
+
+.dict-detail-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: var(--bg-primary);
+}
+
+/* 头部 */
+.dict-header {
+  padding: 30rpx;
+  background: var(--bg-secondary);
+  border-bottom: 1rpx solid var(--border);
+}
+
+.dict-title {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: block;
+}
+
+.dict-description {
+  font-size: 26rpx;
+  color: var(--text-muted);
+  margin-top: 8rpx;
+  display: block;
+}
+
+.dict-meta {
+  display: flex;
+  gap: 24rpx;
+  margin-top: 12rpx;
+}
+
+.meta-item {
+  font-size: 24rpx;
+  color: var(--text-secondary);
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  background: var(--bg-secondary);
+  border-bottom: 1rpx solid var(--border);
+}
+
+.tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20rpx 0;
+  font-size: 28rpx;
+  color: var(--text-muted);
+  position: relative;
+  transition: color 0.2s;
+}
+
+.tab-active {
+  color: var(--accent-primary);
+  font-weight: 600;
+}
+
+.tab-active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 25%;
+  right: 25%;
+  height: 4rpx;
+  background: var(--accent-primary);
+  border-radius: 2rpx;
+}
+
+/* 章节网格 */
+.tab-content {
+  flex: 1;
+  overflow: hidden;
+}
+
+.chapters-grid {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20rpx;
+  gap: 16rpx;
+}
+
+.chapter-btn {
+  width: calc(20% - 16rpx);
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-card);
+  border-radius: 16rpx;
+  border: 1rpx solid var(--border);
+  position: relative;
+}
+
+.chapter-btn:active {
+  opacity: 0.8;
+}
+
+.chapter-num {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.chapter-status {
+  font-size: 20rpx;
+  color: var(--success);
+  margin-top: 4rpx;
+}
+
+.chapter-finished {
+  background: rgba(72, 187, 120, 0.1);
+  border-color: rgba(72, 187, 120, 0.3);
+}
+
+/* 错词列表 */
+.error-list {
+  padding: 20rpx 30rpx;
+}
+
+.error-item {
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid var(--border);
+}
+
+.error-word-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.error-word {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: 'SF Mono', monospace;
+}
+
+.error-count {
+  font-size: 24rpx;
+}
+
+/* 复习区域 */
+.review-section {
+  padding: 20rpx 30rpx;
+}

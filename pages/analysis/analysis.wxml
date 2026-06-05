@@ -1,0 +1,74 @@
+<!-- 统计分析页 -->
+<view class="analysis-page">
+  <scroll-view scroll-y="true" enhanced="true" class="scroll-content">
+    <!-- 总览卡片 -->
+    <view class="overview-section">
+      <text class="section-title">学习总览</text>
+      <view class="stats-grid">
+        <view class="stat-card">
+          <text class="stat-val accent">{{overview.totalWords}}</text>
+          <text class="stat-label">练习单词</text>
+        </view>
+        <view class="stat-card">
+          <text class="stat-val accent">{{overview.totalChapters}}</text>
+          <text class="stat-label">完成章节</text>
+        </view>
+        <view class="stat-card">
+          <text class="stat-val accent">{{overview.accuracy}}%</text>
+          <text class="stat-label">正确率</text>
+        </view>
+        <view class="stat-card">
+          <text class="stat-val accent">{{formattedTotalTime}}</text>
+          <text class="stat-label">练习时长</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 热力图 -->
+    <view class="heatmap-section">
+      <text class="section-title">练习热力图</text>
+      <view class="heatmap-container">
+        <view class="heatmap-row" wx:for="{{heatmapWeeks}}" wx:key="index" wx:for-item="week">
+          <view
+            class="heatmap-cell heat-level-{{item.level}}"
+            wx:for="{{week}}"
+            wx:key="date"
+            wx:for-item="day"
+          >
+            <text class="heatmap-date">{{day.date}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="heatmap-legend">
+        <text class="legend-label">少</text>
+        <view class="legend-cell heat-level-0"></view>
+        <view class="legend-cell heat-level-1"></view>
+        <view class="legend-cell heat-level-2"></view>
+        <view class="legend-cell heat-level-3"></view>
+        <view class="legend-cell heat-level-4"></view>
+        <text class="legend-label">多</text>
+      </view>
+    </view>
+
+    <!-- 每日趋势 -->
+    <view class="daily-section">
+      <text class="section-title">最近 30 天</text>
+      <view class="daily-list">
+        <view class="daily-item" wx:for="{{dailyStats}}" wx:key="date" wx:if="{{item.wordCount > 0}}">
+          <view class="daily-date-col">
+            <text class="daily-date">{{item.date}}</text>
+          </view>
+          <view class="daily-bar-col">
+            <view class="daily-bar" style="width: {{item.chapterCount * 10}}%;"></view>
+          </view>
+          <view class="daily-num-col">
+            <text class="daily-words">{{item.wordCount}} 词</text>
+          </view>
+        </view>
+      </view>
+      <view class="empty-state" wx:if="{{dailyStats.length === 0}}">
+        <text>暂无练习数据</text>
+      </view>
+    </view>
+  </scroll-view>
+</view>

@@ -1,0 +1,80 @@
+<!-- 词典详情页 -->
+<view class="dict-detail-page">
+  <!-- 词典信息头部 -->
+  <view class="dict-header">
+    <text class="dict-title">{{dictInfo.name}}</text>
+    <text class="dict-description">{{dictInfo.description}}</text>
+    <view class="dict-meta">
+      <text class="meta-item">{{dictInfo.length}} 词</text>
+      <text class="meta-item">{{dictInfo.chapterCount}} 章</text>
+    </view>
+    <view class="btn btn-primary btn-block mt-md" bind:tap="onStartPractice">
+      <text>开始练习</text>
+    </view>
+  </view>
+
+  <!-- Tab 切换 -->
+  <view class="tabs">
+    <view class="tab {{activeTab === 'chapters' ? 'tab-active' : ''}}" data-tab="chapters" bind:tap="onTabChange">
+      <text>章节</text>
+    </view>
+    <view class="tab {{activeTab === 'errors' ? 'tab-active' : ''}}" data-tab="errors" bind:tap="onTabChange">
+      <text>错词 ({{errorWordsCount}})</text>
+    </view>
+    <view class="tab {{activeTab === 'review' ? 'tab-active' : ''}}" data-tab="review" bind:tap="onTabChange">
+      <text>复习</text>
+    </view>
+  </view>
+
+  <!-- 章节列表 -->
+  <scroll-view class="tab-content" scroll-y="true" wx:if="{{activeTab === 'chapters'}}">
+    <view class="chapters-grid">
+      <view
+        class="chapter-btn {{item.isFinished ? 'chapter-finished' : ''}}"
+        wx:for="{{chapters}}"
+        wx:key="index"
+        data-chapter="{{item.index}}"
+        bind:tap="onChapterTap"
+      >
+        <text class="chapter-num">{{item.label}}</text>
+        <text class="chapter-status" wx:if="{{item.isFinished}}">✓</text>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 错词列表 -->
+  <scroll-view class="tab-content" scroll-y="true" wx:if="{{activeTab === 'errors'}}">
+    <view wx:if="{{errorWords.length === 0}}" class="empty-state">
+      <text>暂无错词记录</text>
+    </view>
+    <view class="error-list" wx:else>
+      <view class="error-item" wx:for="{{errorWords}}" wx:key="word">
+        <view class="error-word-row">
+          <text class="error-word">{{item.word}}</text>
+          <text class="error-count text-danger">错误 {{item.errorCount}} 次</text>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 复习 -->
+  <view class="tab-content" wx:if="{{activeTab === 'review'}}">
+    <view class="review-section">
+      <view class="card" wx:if="{{activeReview}}">
+        <text class="text-primary text-bold">有未完成的复习</text>
+        <text class="text-muted mt-sm">共 {{activeReview.words.length}} 个单词</text>
+        <view class="btn btn-primary btn-block mt-md" bind:tap="onResumeReview">
+          <text>继续复习</text>
+        </view>
+      </view>
+
+      <view class="card">
+        <text class="text-primary text-bold">错词复习</text>
+        <text class="text-muted mt-sm">根据错误频率和时间智能排序，优先复习最需要的单词</text>
+        <view class="btn btn-secondary btn-block mt-md" bind:tap="onStartReview" loading="{{isGeneratingReview}}">
+          <text>生成复习词表</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

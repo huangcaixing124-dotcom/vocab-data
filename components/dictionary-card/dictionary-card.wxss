@@ -1,0 +1,60 @@
+.dict-card {
+  background: var(--bg-card);
+  border: 1rpx solid var(--border);
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 16rpx;
+  transition: transform 0.2s;
+}
+
+.dict-card:active {
+  transform: scale(0.98);
+}
+
+.dict-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8rpx;
+}
+
+.dict-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.dict-count {
+  font-size: 24rpx;
+  color: var(--accent-primary);
+  font-weight: 500;
+}
+
+.dict-desc {
+  font-size: 24rpx;
+  color: var(--text-muted);
+  margin-bottom: 16rpx;
+}
+
+.dict-progress {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 12rpx;
+}
+
+.dict-progress .progress-bar {
+  flex: 1;
+}
+
+.dict-progress-text {
+  font-size: 22rpx;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.dict-tags {
+  display: flex;
+  gap: 8rpx;
+  flex-wrap: wrap;
+}

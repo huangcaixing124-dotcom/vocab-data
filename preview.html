@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qwerty Learner - 微信小程序预览</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-primary: #0f0f23;
+  --bg-secondary: #1a1a2e;
+  --bg-tertiary: #16213e;
+  --bg-card: #1e1e3a;
+  --text-primary: #e2e8f0;
+  --text-secondary: #a0aec0;
+  --text-muted: #718096;
+  --accent: #667eea;
+  --accent2: #764ba2;
+  --success: #48bb78;
+  --danger: #fc8181;
+  --border: rgba(255,255,255,0.08);
+}
+
+body {
+  background: #111;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  color: var(--text-primary);
+}
+
+.phone-frame {
+  width: 375px;
+  height: 812px;
+  background: var(--bg-primary);
+  border-radius: 40px;
+  overflow: hidden;
+  border: 3px solid #333;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.status-bar {
+  height: 44px;
+  background: var(--bg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 0 20px;
+}
+
+.nav-bar {
+  height: 44px;
+  background: var(--bg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid var(--border);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.page-content {
+  flex: 1;
+  overflow-y: auto;
+  display: none;
+}
+
+.page-content.active { display: flex; flex-direction: column; }
+
+/* TabBar */
+.tabbar {
+  height: 56px;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.tab-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  cursor: pointer;
+  padding: 4px 12px;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.tab-item:active { opacity: 0.7; }
+
+.tab-icon { font-size: 20px; }
+.tab-text { font-size: 10px; color: var(--text-muted); }
+.tab-item.active .tab-text { color: var(--accent); font-weight: 600; }
+.tab-item.active .tab-icon { color: var(--accent); }
+
+/* ============ Gallery Page ============ */
+.search-bar { padding: 12px 16px; background: var(--bg-secondary); }
+.search-bar input {
+  width: 100%; height: 36px; background: var(--bg-tertiary);
+  border: 1px solid var(--border); border-radius: 8px;
+  color: var(--text-primary); padding: 0 12px; font-size: 14px;
+  outline: none;
+}
+.search-bar input::placeholder { color: var(--text-muted); }
+
+.category-tabs {
+  display: flex; gap: 8px; padding: 10px 16px;
+  background: var(--bg-secondary); border-bottom: 1px solid var(--border);
+  overflow-x: auto; white-space: nowrap;
+}
+
+.cat-tab {
+  padding: 6px 16px; border-radius: 20px; font-size: 13px;
+  background: var(--bg-tertiary); color: var(--text-secondary);
+  cursor: pointer; border: 1px solid var(--border); transition: all 0.2s;
+  flex-shrink: 0;
+}
+.cat-tab.active {
+  background: var(--accent); color: #fff; border-color: var(--accent);
+}
+
+.dict-list { flex: 1; overflow-y: auto; padding: 12px 16px; }
+
+.dict-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 14px; margin-bottom: 10px;
+  cursor: pointer; transition: transform 0.15s;
+}
+.dict-card:active { transform: scale(0.98); }
+.dict-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.dict-name { font-size: 15px; font-weight: 600; }
+.dict-count { font-size: 12px; color: var(--accent); }
+.dict-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; }
+.dict-progress-row { display: flex; align-items: center; gap: 8px; }
+.dict-progress-bar { flex: 1; height: 4px; background: var(--bg-tertiary); border-radius: 2px; overflow: hidden; }
+.dict-progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 2px; }
+.dict-progress-text { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+.dict-tags { display: flex; gap: 4px; margin-top: 8px; }
+.dict-tag { font-size: 11px; padding: 2px 8px; background: var(--bg-tertiary); border-radius: 4px; color: var(--text-muted); }
+
+/* ============ Typing Page ============ */
+.typing-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 16px; background: var(--bg-secondary); border-bottom: 1px solid var(--border);
+}
+.dict-label { font-size: 14px; font-weight: 600; color: var(--accent); }
+.chapter-label { font-size: 12px; color: var(--text-muted); margin-left: 8px; }
+.timer { font-size: 16px; font-weight: 600; font-family: 'SF Mono', monospace; }
+
+.typing-body { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+
+/* Progress */
+.progress-wrap { padding: 0 16px 10px; }
+.progress-info { display: flex; justify-content: space-between; margin-bottom: 4px; }
+.progress-info span { font-size: 12px; color: var(--text-muted); }
+.progress-info .pct { color: var(--accent); font-weight: 600; }
+.progress-bar-wrap { height: 4px; background: var(--bg-tertiary); border-radius: 2px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 2px; transition: width 0.3s; }
+
+/* Word Panel */
+.word-panel { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+.prev-word, .next-word { font-size: 13px; color: var(--text-muted); opacity: 0.3; padding: 4px 0; }
+.phonetic-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.phonetic { font-size: 14px; color: var(--text-secondary); font-style: italic; }
+.sound-btn { width: 28px; height: 28px; background: var(--bg-tertiary); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; }
+
+.letters { display: flex; flex-wrap: wrap; justify-content: center; gap: 3px; }
+.letter-box { display: flex; flex-direction: column; align-items: center; min-width: 24px; padding: 4px 2px; }
+.letter-char { font-size: 28px; font-weight: 600; color: var(--text-muted); font-family: 'SF Mono', monospace; letter-spacing: 2px; transition: color 0.15s; }
+.letter-box.correct .letter-char { color: var(--success); }
+.letter-box.wrong .letter-char { color: var(--danger); animation: shake 0.3s; }
+.letter-box.current { position: relative; }
+.letter-cursor { width: 18px; height: 2px; background: var(--accent); border-radius: 1px; margin-top: 2px; animation: blink 1s infinite; }
+.wrong-hint { margin-top: 10px; font-size: 12px; color: var(--danger); background: rgba(252,129,129,0.1); padding: 4px 12px; border-radius: 6px; }
+
+.translation { margin-top: 16px; font-size: 14px; color: var(--text-secondary); text-align: center; }
+
+.typing-stats { display: flex; justify-content: center; gap: 40px; padding: 6px 0 10px; }
+.stat-item { display: flex; flex-direction: column; align-items: center; }
+.stat-val { font-size: 18px; font-weight: 700; }
+.stat-val.green { color: var(--success); }
+.stat-val.red { color: var(--danger); }
+.stat-name { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+.skip-area { display: flex; justify-content: center; padding-bottom: 8px; }
+.skip-btn { padding: 6px 16px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; font-size: 13px; color: var(--text-secondary); cursor: pointer; }
+
+/* Keyboard */
+.keyboard { padding: 8px 4px 14px; background: var(--bg-secondary); border-top: 1px solid var(--border); }
+.kb-row { display: flex; justify-content: center; gap: 4px; margin-bottom: 5px; }
+.kb-row:nth-child(2) { padding-left: 14px; }
+.kb-row:nth-child(3) { padding-left: 28px; }
+.kb-row-bottom { justify-content: center; margin-top: 3px; }
+
+.key {
+  width: 33px; height: 42px; display: flex; align-items: center; justify-content: center;
+  background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px;
+  font-size: 15px; font-weight: 500; text-transform: uppercase; cursor: pointer;
+  transition: all 0.1s; user-select: none;
+}
+.key:active, .key.pressed { background: var(--accent); color: #fff; transform: scale(0.95); }
+.key.hint { background: rgba(102,126,234,0.15); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+.key.correct-flash { background: var(--success); color: #fff; }
+.key.wrong-flash { background: var(--danger); color: #fff; animation: shake 0.3s; }
+.key-space { width: 160px; height: 36px; font-size: 12px; color: var(--text-muted); }
+
+/* ============ Result Screen ============ */
+.result-overlay {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(15,15,35,0.95); z-index: 100;
+  display: flex; align-items: center; justify-content: center;
+  animation: fadeIn 0.3s;
+}
+.result-overlay.hidden { display: none; }
+
+.result-card {
+  background: var(--bg-secondary); border-radius: 16px; padding: 30px 24px;
+  width: 85%; border: 1px solid var(--border); text-align: center;
+}
+.result-emoji { font-size: 48px; display: block; margin-bottom: 8px; }
+.result-title { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+.result-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
+
+.result-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+.result-stat { background: var(--bg-tertiary); border-radius: 10px; padding: 12px; text-align: center; }
+.result-stat-val { font-size: 22px; font-weight: 700; color: var(--accent); }
+.result-stat-label { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+.result-actions { display: flex; flex-direction: column; gap: 8px; }
+
+/* ============ Error Book ============ */
+.error-toolbar { display: flex; gap: 8px; padding: 10px 16px; background: var(--bg-secondary); border-bottom: 1px solid var(--border); align-items: center; }
+.error-toolbar input { flex: 1; height: 32px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); padding: 0 10px; font-size: 13px; outline: none; }
+.sort-btn { padding: 6px 12px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; font-size: 12px; color: var(--text-secondary); cursor: pointer; white-space: nowrap; }
+
+.error-list { flex: 1; overflow-y: auto; }
+.error-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); cursor: pointer; }
+.error-item:active { background: var(--bg-tertiary); }
+.error-word { font-size: 15px; font-weight: 600; font-family: 'SF Mono', monospace; }
+.error-dict { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.error-badge { min-width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; background: rgba(252,129,129,0.15); border-radius: 50%; font-size: 13px; font-weight: 700; color: var(--danger); }
+
+/* ============ Settings ============ */
+.settings-section { background: var(--bg-secondary); margin-bottom: 10px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.section-label { font-size: 12px; font-weight: 600; color: var(--text-muted); padding: 12px 16px 6px; text-transform: uppercase; letter-spacing: 1px; }
+.setting-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); }
+.setting-item:last-child { border-bottom: none; }
+.setting-name { font-size: 14px; }
+.setting-val { font-size: 14px; color: var(--text-muted); }
+
+.toggle {
+  width: 44px; height: 24px; background: var(--bg-tertiary); border-radius: 12px;
+  position: relative; cursor: pointer; transition: background 0.2s; border: 1px solid var(--border);
+}
+.toggle.on { background: var(--accent); border-color: var(--accent); }
+.toggle::after {
+  content: ''; position: absolute; top: 2px; left: 2px;
+  width: 18px; height: 18px; background: #fff; border-radius: 50%;
+  transition: transform 0.2s;
+}
+.toggle.on::after { transform: translateX(20px); }
+
+/* ============ Analysis ============ */
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 16px; }
+.stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; }
+.stat-card-val { font-size: 20px; font-weight: 700; color: var(--accent); }
+.stat-card-label { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+.heatmap-section { padding: 0 16px 16px; }
+.heatmap-title { font-size: 15px; font-weight: 600; margin-bottom: 10px; }
+.heatmap { display: flex; gap: 3px; overflow-x: auto; padding-bottom: 8px; }
+.heatmap-week { display: flex; flex-direction: column; gap: 3px; }
+.heat-cell { width: 12px; height: 12px; border-radius: 3px; }
+.heat-0 { background: var(--bg-tertiary); }
+.heat-1 { background: rgba(102,126,234,0.2); }
+.heat-2 { background: rgba(102,126,234,0.4); }
+.heat-3 { background: rgba(102,126,234,0.7); }
+.heat-4 { background: var(--accent); }
+.heatmap-legend { display: flex; align-items: center; justify-content: flex-end; gap: 4px; margin-top: 8px; }
+.legend-label { font-size: 10px; color: var(--text-muted); }
+.legend-cell { width: 10px; height: 10px; border-radius: 2px; }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 10px 20px; border-radius: 10px; font-size: 14px; font-weight: 500;
+  cursor: pointer; transition: opacity 0.2s; border: none; width: 100%;
+}
+.btn:active { opacity: 0.8; }
+.btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; }
+.btn-secondary { background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border); }
+.btn-ghost { background: transparent; color: var(--text-secondary); }
+
+/* Empty */
+.empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; color: var(--text-muted); font-size: 14px; }
+.empty-icon { font-size: 48px; margin-bottom: 12px; }
+
+/* Dict Detail Page (overlay) */
+.detail-overlay {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--bg-primary); z-index: 50; display: flex; flex-direction: column;
+}
+.detail-overlay.hidden { display: none; }
+.detail-header { padding: 16px; background: var(--bg-secondary); border-bottom: 1px solid var(--border); }
+.detail-title { font-size: 22px; font-weight: 700; }
+.detail-desc { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+.detail-meta { display: flex; gap: 16px; margin-top: 8px; }
+.detail-meta span { font-size: 12px; color: var(--text-secondary); }
+.detail-start-btn { margin-top: 12px; }
+
+.detail-tabs { display: flex; background: var(--bg-secondary); border-bottom: 1px solid var(--border); }
+.detail-tab { flex: 1; text-align: center; padding: 10px 0; font-size: 14px; color: var(--text-muted); cursor: pointer; position: relative; }
+.detail-tab.active { color: var(--accent); font-weight: 600; }
+.detail-tab.active::after { content: ''; position: absolute; bottom: 0; left: 25%; right: 25%; height: 2px; background: var(--accent); border-radius: 1px; }
+
+.detail-content { flex: 1; overflow-y: auto; padding: 12px; }
+.chapters-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.chapter-btn {
+  width: calc(20% - 8px); aspect-ratio: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; background: var(--bg-card);
+  border: 1px solid var(--border); border-radius: 10px; cursor: pointer;
+  font-size: 15px; font-weight: 600; transition: all 0.15s;
+}
+.chapter-btn:active { opacity: 0.8; }
+.chapter-btn.done { background: rgba(72,187,120,0.1); border-color: rgba(72,187,120,0.3); }
+.chapter-btn .check { font-size: 10px; color: var(--success); margin-top: 2px; }
+
+.detail-back { position: absolute; top: 48px; left: 12px; font-size: 20px; cursor: pointer; color: var(--text-muted); z-index: 51; }
+
+/* Animations */
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+@keyframes shake { 0% { transform: translateX(0); } 25% { transform: translateX(-3px); } 50% { transform: translateX(3px); } 75% { transform: translateX(-3px); } 100% { transform: translateX(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 60% { transform: scale(1.1); } 100% { transform: scale(1); opacity: 1; } }
+@keyframes wordDone { 0% { transform: scale(1); } 30% { transform: scale(1.06); } 100% { transform: scale(1); opacity: 0.4; } }
+
+.letter-box.done .letter-char { color: var(--success); }
+.letters.word-complete { animation: wordDone 0.4s ease forwards; }
+.word-done-check { font-size: 32px; color: var(--success); margin-top: 8px; animation: popIn 0.3s ease; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 0; }
+</style>
+</head>
+<body>
+
+<div class="phone-frame">
+  <!-- Status Bar -->
+  <div class="status-bar">9:41  Qwerty Learner</div>
+
+  <!-- ===== GALLERY PAGE ===== -->
+  <div class="page-content active" id="page-gallery">
+    <div class="nav-bar">词典选择</div>
+    <div class="search-bar"><input type="text" placeholder="搜索词典..." id="search-input" oninput="filterDicts()"></div>
+    <div class="category-tabs" id="category-tabs"></div>
+    <div class="dict-list" id="dict-list"></div>
+  </div>
+
+  <!-- ===== TYPING PAGE ===== -->
+  <div class="page-content" id="page-typing">
+    <div class="typing-header">
+      <div><span class="dict-label" id="typing-dict-name">CET-4</span><span class="chapter-label" id="typing-chapter">第 1 章</span></div>
+      <div class="timer" id="typing-timer">00:00</div>
+    </div>
+    <div class="typing-body">
+      <div class="progress-wrap">
+        <div class="progress-info"><span id="progress-text">0 / 20</span><span class="pct" id="progress-pct">0%</span></div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
+      </div>
+      <div class="word-panel">
+        <div class="prev-word" id="prev-word"></div>
+        <div class="phonetic-row"><span class="phonetic" id="phonetic"></span><span class="sound-btn" onclick="playSound()">🔊</span></div>
+        <div class="letters" id="letters"></div>
+        <div class="wrong-hint" id="wrong-hint" style="display:none">输入错误，请重新输入</div>
+        <div class="translation" id="translation"></div>
+        <div class="next-word" id="next-word"></div>
+      </div>
+      <div class="typing-stats">
+        <div class="stat-item"><span class="stat-val green" id="stat-correct">0</span><span class="stat-name">正确</span></div>
+        <div class="stat-item"><span class="stat-val red" id="stat-wrong">0</span><span class="stat-name">错误</span></div>
+      </div>
+      <div class="skip-area" id="skip-area" style="display:none"><span class="skip-btn" onclick="skipWord()">跳过此词 →</span></div>
+      <div class="keyboard" id="keyboard"></div>
+    </div>
+    <!-- Result Screen -->
+    <div class="result-overlay hidden" id="result-screen">
+      <div class="result-card">
+        <span class="result-emoji">🎉</span>
+        <div class="result-title">章节完成！</div>
+        <div class="result-sub" id="result-sub"></div>
+        <div class="result-stats">
+          <div class="result-stat"><div class="result-stat-val" id="result-time">00:00</div><div class="result-stat-label">用时</div></div>
+          <div class="result-stat"><div class="result-stat-val" id="result-accuracy">0%</div><div class="result-stat-label">正确率</div></div>
+          <div class="result-stat"><div class="result-stat-val" id="result-wpm">0</div><div class="result-stat-label">WPM</div></div>
+          <div class="result-stat"><div class="result-stat-val" id="result-perfect">0/20</div><div class="result-stat-label">全对</div></div>
+        </div>
+        <div class="result-actions">
+          <div class="btn btn-primary" onclick="nextChapter()">下一章</div>
+          <div class="btn btn-secondary" onclick="reviewChapter()">复习本章</div>
+          <div class="btn btn-ghost" onclick="switchTab('gallery')">返回词典</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ERROR BOOK PAGE ===== -->
+  <div class="page-content" id="page-error-book">
+    <div class="nav-bar">错题本</div>
+    <div class="error-toolbar"><input type="text" placeholder="搜索单词..." id="error-search" oninput="renderErrorList()"><span class="sort-btn" onclick="toggleSort()">↓ 错误次数</span></div>
+    <div class="error-list" id="error-list">
+      <div class="empty-state"><span class="empty-icon">📝</span><span style="margin-top:8px">暂无错词记录</span><span style="font-size:12px;color:var(--text-muted);margin-top:4px">开始练习后，错误的单词会出现在这里</span></div>
+    </div>
+  </div>
+
+  <!-- ===== SETTINGS PAGE ===== -->
+  <div class="page-content" id="page-settings">
+    <div class="nav-bar">设置</div>
+    <div style="flex:1;overflow-y:auto">
+      <div class="settings-section">
+        <div class="section-label">发音设置</div>
+        <div class="setting-item"><span class="setting-name">自动播放发音</span><div class="toggle on" id="toggle-pron" onclick="toggleSetting('pron')"></div></div>
+        <div class="setting-item"><span class="setting-name">发音类型</span><span class="setting-val" id="val-pronType" onclick="cycleSetting('pronType',['美音','英音'])" style="cursor:pointer">美音 ›</span></div>
+        <div class="setting-item"><span class="setting-name">发音语速</span><span class="setting-val" id="val-rate" onclick="cycleSetting('rate',['0.5x','0.75x','1x','1.25x','1.5x'])" style="cursor:pointer">1x ›</span></div>
+        <div class="setting-item"><span class="setting-name">朗读中文释义</span><div class="toggle" id="toggle-transRead" onclick="toggleSetting('transRead')"></div></div>
+      </div>
+      <div class="settings-section">
+        <div class="section-label">音效设置</div>
+        <div class="setting-item"><span class="setting-name">按键音</span><div class="toggle on" id="toggle-keySound" onclick="toggleSetting('keySound')"></div></div>
+        <div class="setting-item"><span class="setting-name">正确/错误提示音</span><div class="toggle on" id="toggle-hintSound" onclick="toggleSetting('hintSound')"></div></div>
+      </div>
+      <div class="settings-section">
+        <div class="section-label">显示设置</div>
+        <div class="setting-item"><span class="setting-name">显示音标</span><div class="toggle on" id="toggle-phonetic" onclick="toggleSetting('phonetic')"></div></div>
+        <div class="setting-item"><span class="setting-name">显示前后单词</span><div class="toggle on" id="toggle-prevNext" onclick="toggleSetting('prevNext')"></div></div>
+        <div class="setting-item"><span class="setting-name">单词字体大小</span><span class="setting-val" id="val-fontSize" onclick="cycleSetting('fontSize',['小','中','大','特大'])" style="cursor:pointer">中 ›</span></div>
+      </div>
+      <div class="settings-section">
+        <div class="section-label">主题设置</div>
+        <div class="setting-item"><span class="setting-name">深色模式</span><div class="toggle on" id="toggle-darkMode" onclick="toggleSetting('darkMode')"></div></div>
+      </div>
+      <div class="settings-section">
+        <div class="section-label">练习设置</div>
+        <div class="setting-item"><span class="setting-name">忽略大小写</span><div class="toggle on" id="toggle-ignoreCase" onclick="toggleSetting('ignoreCase')"></div></div>
+        <div class="setting-item"><span class="setting-name">随机顺序</span><div class="toggle" id="toggle-random" onclick="toggleSetting('random')"></div></div>
+        <div class="setting-item"><span class="setting-name">默写模式</span><div class="toggle" id="toggle-dictation" onclick="toggleSetting('dictation')"></div></div>
+        <div class="setting-item"><span class="setting-name">单词循环次数</span><span class="setting-val" id="val-loop" onclick="cycleSetting('loop',['1 次','3 次','5 次','无限'])" style="cursor:pointer">1 次 ›</span></div>
+      </div>
+      <div class="settings-section">
+        <div class="section-label">数据管理</div>
+        <div class="setting-item" onclick="showAnalysis()" style="cursor:pointer"><span class="setting-name">学习统计</span><span class="setting-val">查看 ›</span></div>
+      </div>
+      <div class="settings-section">
+        <div class="section-label">关于</div>
+        <div class="setting-item"><span class="setting-name">版本</span><span class="setting-val">1.0.0</span></div>
+        <div class="setting-item"><span class="setting-name">基于</span><span class="setting-val">Qwerty Learner</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ANALYSIS PAGE (overlay) ===== -->
+  <div class="detail-overlay hidden" id="analysis-page">
+    <span class="detail-back" onclick="closeAnalysis()">←</span>
+    <div class="detail-header">
+      <div class="detail-title">学习统计</div>
+      <div class="detail-desc">你的学习数据一览</div>
+    </div>
+    <div class="detail-content" id="analysis-content"></div>
+  </div>
+
+  <!-- ===== DICT DETAIL OVERLAY ===== -->
+  <div class="detail-overlay hidden" id="dict-detail">
+    <span class="detail-back" onclick="closeDetail()">←</span>
+    <div class="detail-header">
+      <div class="detail-title" id="detail-title"></div>
+      <div class="detail-desc" id="detail-desc"></div>
+      <div class="detail-meta"><span id="detail-words"></span><span id="detail-chapters"></span></div>
+      <div class="detail-start-btn"><div class="btn btn-primary" onclick="startPractice()">开始练习</div></div>
+    </div>
+    <div class="detail-tabs">
+      <div class="detail-tab active" onclick="switchDetailTab(this,'chapters')">章节</div>
+      <div class="detail-tab" onclick="switchDetailTab(this,'errors')">错词</div>
+    </div>
+    <div class="detail-content" id="detail-content"></div>
+  </div>
+
+  <!-- TabBar -->
+  <div class="tabbar">
+    <div class="tab-item active" onclick="switchTab('gallery')"><span class="tab-icon">📚</span><span class="tab-text">词典</span></div>
+    <div class="tab-item" onclick="switchTab('typing')"><span class="tab-icon">⌨️</span><span class="tab-text">练习</span></div>
+    <div class="tab-item" onclick="switchTab('error-book')"><span class="tab-icon">📝</span><span class="tab-text">错题</span></div>
+    <div class="tab-item" onclick="switchTab('settings')"><span class="tab-icon">⚙️</span><span class="tab-text">设置</span></div>
+  </div>
+</div>
+
+<script>
+// ============ DATA ============
+const dictionaries = [
+  { id:'cet4', name:'CET-4', desc:'大学英语四级词库', category:'中国考试', tags:['大学英语'], length:2607, ch:131 },
+  { id:'cet6', name:'CET-6', desc:'大学英语六级词库', category:'中国考试', tags:['大学英语'], length:2345, ch:118 },
+  { id:'kaoyan', name:'考研', desc:'研究生英语入学考试词库', category:'中国考试', tags:['考研'], length:3728, ch:187 },
+  { id:'toefl', name:'TOEFL', desc:'托福词库', category:'国际考试', tags:['托福'], length:4264, ch:214 },
+  { id:'ielts', name:'IELTS', desc:'雅思词库', category:'国际考试', tags:['雅思'], length:3575, ch:179 },
+  { id:'gre', name:'GRE', desc:'GRE 词库', category:'国际考试', tags:['GRE'], length:6515, ch:326 },
+  { id:'gaokao', name:'高考', desc:'高考英语词库', category:'中国考试', tags:['高考'], length:3899, ch:195 },
+  { id:'python', name:'Python', desc:'Python 编程词汇', category:'代码练习', tags:['Python'], length:1815, ch:91 },
+  { id:'javascript', name:'JavaScript', desc:'JavaScript 编程词汇', category:'代码练习', tags:['JavaScript'], length:1744, ch:88 },
+  { id:'rust', name:'Rust', desc:'Rust 编程词汇', category:'代码练习', tags:['Rust'], length:1749, ch:88 },
+];
+
+// Demo words for CET-4 chapter 1
+const demoWords = [
+  { name:'cancel', trans:['取消，撤销；删去'], usphone:"'kænsl", ukphone:"'kænsl" },
+  { name:'explosive', trans:['爆炸的；极易引起争论的'], usphone:"ɪk'splosɪv", ukphone:"ɪk'spləusɪv" },
+  { name:'numerous', trans:['众多的，许多的'], usphone:"'numərəs", ukphone:"'njuːmərəs" },
+  { name:'govern', trans:['统治，治理；支配'], usphone:"'gʌvərn", ukphone:"'gʌvn" },
+  { name:'analyse', trans:['分析，分解'], usphone:"'ænəlaɪz", ukphone:"'ænəlaɪz" },
+  { name:'discourage', trans:['使泄气；阻止'], usphone:"dɪs'kɜːrɪdʒ", ukphone:"dɪs'kʌrɪdʒ" },
+  { name:'resemble', trans:['像，类似于'], usphone:"rɪ'zembl", ukphone:"rɪ'zembl" },
+  { name:'creativity', trans:['创造力'], usphone:"ˌkriːeɪ'tɪvəti", ukphone:"ˌkriːeɪ'tɪvəti" },
+  { name:'target', trans:['目标；靶子'], usphone:"'tɑːrɡɪt", ukphone:"'tɑːɡɪt" },
+  { name:'obvious', trans:['明显的，显而易见的'], usphone:"'ɑːbviəs", ukphone:"'ɒbviəs" },
+  { name:'circumstance', trans:['环境，情况'], usphone:"'sɜːrkəmstæns", ukphone:"'sɜːkəmstəns" },
+  { name:'environment', trans:['环境，外界'], usphone:"ɪn'vaɪrənmənt", ukphone:"ɪn'vaɪrənmənt" },
+  { name:'absolute', trans:['绝对的；完全的'], usphone:"'æbsəluːt", ukphone:"'æbsəluːt" },
+  { name:'achieve', trans:['完成，实现；达到'], usphone:"ə'tʃiːv", ukphone:"ə'tʃiːv" },
+  { name:'acknowledge', trans:['承认；致谢'], usphone:"ək'nɑːlɪdʒ", ukphone:"ək'nɒlɪdʒ" },
+  { name:'acquire', trans:['取得，获得'], usphone:"ə'kwaɪər", ukphone:"ə'kwaɪə" },
+  { name:'adapt', trans:['使适应；改编'], usphone:"ə'dæpt", ukphone:"ə'dæpt" },
+  { name:'adequate', trans:['足够的；适当的'], usphone:"'ædɪkwət", ukphone:"'ædɪkwət" },
+  { name:'advocate', trans:['提倡，倡导'], usphone:"'ædvəkeɪt", ukphone:"'ædvəkeɪt" },
+  { name:'afford', trans:['担负得起；提供'], usphone:"ə'fɔːrd", ukphone:"ə'fɔːd" },
+];
+
+const categories = [...new Set(dictionaries.map(d => d.category))];
+
+// ============ STATE ============
+let currentTab = 'gallery';
+let currentCategory = categories[0];
+let currentDict = dictionaries[0];
+let currentChapter = 0;
+let words = [...demoWords];
+let wordIndex = 0;
+let inputWord = '';
+let letterStates = [];
+let hasWrong = false;
+let wrongTimer = null;
+let isTyping = false;
+let timerInterval = null;
+let time = 0;
+let correctCount = 0;
+let wrongCount = 0;
+let wordCount = 0;
+let perfectWords = 0;
+let currentWrongCount = 0;
+let isFinished = false;
+let loopCountMap = {};
+let loopIndex = 0;
+
+// ============ INIT ============
+function init() {
+  renderCategories();
+  renderDictList();
+  renderKeyboard();
+  document.addEventListener('keydown', handleKeyDown);
+}
+
+// ============ TABS ============
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + tab).classList.add('active');
+  document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+  const idx = {gallery:0, typing:1, 'error-book':2, settings:3}[tab];
+  document.querySelectorAll('.tab-item')[idx].classList.add('active');
+  document.getElementById('dict-detail').classList.add('hidden');
+  if (tab === 'typing') {
+    if (words.length > 0 && wordIndex === 0 && !isTyping) {
+      // 首次进入练习页，初始化第一个单词
+      setupWord(0);
+    } else {
+      // 回到练习页，恢复键盘提示
+      renderLetters();
+      updateKeyHint();
+    }
+  }
+  if (tab === 'error-book') renderErrorList();
+}
+
+// ============ GALLERY ============
+function renderCategories() {
+  const el = document.getElementById('category-tabs');
+  el.innerHTML = categories.map(c =>
+    `<div class="cat-tab ${c===currentCategory?'active':''}" onclick="selectCategory('${c}')">${c}</div>`
+  ).join('');
+}
+
+function selectCategory(cat) {
+  currentCategory = cat;
+  renderCategories();
+  renderDictList();
+}
+
+function filterDicts() { renderDictList(); }
+
+function renderDictList() {
+  const kw = document.getElementById('search-input').value.toLowerCase();
+  let filtered = dictionaries.filter(d => d.category === currentCategory);
+  if (kw) filtered = dictionaries.filter(d => d.name.toLowerCase().includes(kw) || d.desc.toLowerCase().includes(kw));
+  document.getElementById('dict-list').innerHTML = filtered.map(d => {
+    // 使用词典 ID 生成固定的模拟进度（非随机）
+    const seed = d.id.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+    const done = seed % Math.max(1, Math.floor(d.ch * 0.4));
+    const pct = d.ch > 0 ? Math.round(done / d.ch * 100) : 0;
+    return `<div class="dict-card" onclick="openDictDetail('${d.id}')">
+      <div class="dict-card-header"><span class="dict-name">${d.name}</span><span class="dict-count">${d.length} 词</span></div>
+      <div class="dict-desc">${d.desc}</div>
+      <div class="dict-progress-row">
+        <div class="dict-progress-bar"><div class="dict-progress-fill" style="width:${pct}%"></div></div>
+        <span class="dict-progress-text">${done}/${d.ch} 章</span>
+      </div>
+      ${d.tags.map(t=>`<span class="dict-tag">${t}</span>`).join('')}
+    </div>`;
+  }).join('');
+}
+
+// ============ DICT DETAIL ============
+function openDictDetail(id) {
+  currentDict = dictionaries.find(d => d.id === id);
+  document.getElementById('detail-title').textContent = currentDict.name;
+  document.getElementById('detail-desc').textContent = currentDict.desc;
+  document.getElementById('detail-words').textContent = currentDict.length + ' 词';
+  document.getElementById('detail-chapters').textContent = currentDict.ch + ' 章';
+  renderChaptersGrid();
+  document.getElementById('dict-detail').classList.remove('hidden');
+}
+
+function closeDetail() { document.getElementById('dict-detail').classList.add('hidden'); }
+
+function switchDetailTab(el, tab) {
+  document.querySelectorAll('.detail-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  if (tab === 'chapters') renderChaptersGrid();
+  else renderDetailErrors();
+}
+
+function renderChaptersGrid() {
+  const done = new Set([0,1,2]);
+  let html = '<div class="chapters-grid">';
+  for (let i = 0; i < Math.min(currentDict.ch, 40); i++) {
+    html += `<div class="chapter-btn ${done.has(i)?'done':''}" onclick="selectChapter(${i})">
+      ${i+1}${done.has(i)?'<div class="check">✓</div>':''}</div>`;
+  }
+  html += '</div>';
+  document.getElementById('detail-content').innerHTML = html;
+}
+
+function renderDetailErrors() {
+  document.getElementById('detail-content').innerHTML = '<div class="empty-state"><span class="empty-icon">✅</span><span style="margin-top:8px">暂无错词</span></div>';
+}
+
+function selectChapter(ch) {
+  currentChapter = ch;
+  wordIndex = 0;
+  isFinished = false;
+  resetStats();
+  closeDetail();
+  switchTab('typing');
+}
+
+function startPractice() { selectChapter(0); }
+
+// ============ TYPING ============
+function setupWord(idx) {
+  if (idx >= words.length) { finishChapter(); return; }
+  wordIndex = idx;
+  inputWord = '';
+  hasWrong = false;
+  currentWrongCount = 0;
+  letterStates = words[idx].name.split('').map(() => 'normal');
+  document.getElementById('skip-area').style.display = 'none';
+  document.getElementById('wrong-hint').style.display = 'none';
+  document.getElementById('result-screen').classList.add('hidden');
+
+  const w = words[idx];
+  document.getElementById('typing-dict-name').textContent = currentDict.name;
+  document.getElementById('typing-chapter').textContent = `第 ${currentChapter+1} 章`;
+  document.getElementById('phonetic').textContent = w.usphone ? `/${w.usphone}/` : '';
+  document.getElementById('translation').textContent = w.trans[0] || '';
+  document.getElementById('prev-word').textContent = idx > 0 ? words[idx-1].name : '';
+  document.getElementById('next-word').textContent = idx < words.length-1 ? words[idx+1].name : '';
+
+  renderLetters();
+  updateProgress();
+  updateKeyHint();
+
+  // Apply current font size setting
+  const size = fontSizeMap[settings.fontSize];
+  document.querySelectorAll('.letter-char').forEach(el => el.style.fontSize = size + 'px');
+  // Apply phonetic visibility
+  const phEl = document.querySelector('.phonetic-row');
+  if (phEl) phEl.style.display = settings.phonetic ? 'flex' : 'none';
+  // Apply prev/next visibility
+  const prevEl = document.getElementById('prev-word');
+  const nextEl = document.getElementById('next-word');
+  if (prevEl) prevEl.style.display = settings.prevNext ? 'block' : 'none';
+  if (nextEl) nextEl.style.display = settings.prevNext ? 'block' : 'none';
+}
+
+function renderLetters() {
+  const w = words[wordIndex].name;
+  const el = document.getElementById('letters');
+  el.innerHTML = w.split('').map((ch, i) => {
+    const state = letterStates[i] || 'normal';
+    const isCurrent = i === inputWord.length;
+    return `<div class="letter-box ${state} ${isCurrent?'current':''}">
+      <span class="letter-char">${ch}</span>${isCurrent?'<div class="letter-cursor"></div>':''}</div>`;
+  }).join('');
+}
+
+function updateProgress() {
+  const pct = words.length > 0 ? Math.round(wordIndex / words.length * 100) : 0;
+  document.getElementById('progress-text').textContent = `${wordIndex} / ${words.length}`;
+  document.getElementById('progress-pct').textContent = pct + '%';
+  document.getElementById('progress-fill').style.width = pct + '%';
+}
+
+function handleKeyDown(e) {
+  if (currentTab !== 'typing' || isFinished) return;
+  if (e.key === 'Tab') { e.preventDefault(); return; }
+  if (e.key.length !== 1) return;
+  if (hasWrong) return;
+
+  if (!isTyping) { isTyping = true; startTimer(); }
+
+  const w = words[wordIndex];
+  const expected = w.name[inputWord.length];
+  if (!expected) return;
+
+  const isCorrect = settings.ignoreCase
+    ? e.key.toLowerCase() === expected.toLowerCase()
+    : e.key === expected;
+
+  if (isCorrect) {
+    // Correct
+    inputWord += w.name[inputWord.length];
+    letterStates[inputWord.length - 1] = 'correct';
+    correctCount++;
+    flashKey(e.key, 'correct');
+    document.getElementById('stat-correct').textContent = correctCount;
+    renderLetters();
+    updateKeyHint();
+    if (inputWord.length === w.name.length) onWordFinished();
+  } else {
+    // Wrong
+    wrongCount++;
+    currentWrongCount++;
+    letterStates[inputWord.length] = 'wrong';
+    hasWrong = true;
+    flashKey(e.key, 'wrong');
+    document.getElementById('stat-wrong').textContent = wrongCount;
+    document.getElementById('wrong-hint').style.display = 'block';
+    renderLetters();
+    if (currentWrongCount >= 4) document.getElementById('skip-area').style.display = 'flex';
+    if (wrongTimer) clearTimeout(wrongTimer);
+    wrongTimer = setTimeout(() => {
+      inputWord = '';
+      letterStates = words[wordIndex].name.split('').map(() => 'normal');
+      hasWrong = false;
+      document.getElementById('wrong-hint').style.display = 'none';
+      renderLetters();
+      updateKeyHint();
+    }, 300);
+  }
+}
+
+function onWordFinished() {
+  wordCount++;
+  if (currentWrongCount === 0) perfectWords++;
+  document.getElementById('stat-correct').textContent = correctCount;
+
+  // Loop word logic
+  const loopTimes = loopMap[settings.loop] || 1;
+  const currentLoopCount = (loopCountMap[wordIndex] || 0) + 1;
+  loopCountMap[wordIndex] = currentLoopCount;
+
+  // 播放完成动画
+  const lettersEl = document.getElementById('letters');
+  lettersEl.classList.add('word-complete');
+  const checkEl = document.createElement('div');
+  checkEl.className = 'word-done-check';
+  checkEl.textContent = '✓';
+  lettersEl.parentNode.insertBefore(checkEl, lettersEl.nextSibling);
+
+  setTimeout(() => {
+    lettersEl.classList.remove('word-complete');
+    if (checkEl.parentNode) checkEl.parentNode.removeChild(checkEl);
+    if (currentLoopCount < loopTimes) {
+      setupWord(wordIndex); // Replay same word
+    } else {
+      setupWord(wordIndex + 1);
+    }
+  }, 500);
+}
+
+function skipWord() {
+  if (wrongTimer) clearTimeout(wrongTimer);
+  hasWrong = false;
+  setupWord(wordIndex + 1);
+}
+
+function resetStats() {
+  isTyping = false; time = 0; correctCount = 0; wrongCount = 0;
+  wordCount = 0; perfectWords = 0; loopCountMap = {};
+  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+  document.getElementById('typing-timer').textContent = '00:00';
+  document.getElementById('stat-correct').textContent = '0';
+  document.getElementById('stat-wrong').textContent = '0';
+}
+
+function startTimer() {
+  if (timerInterval) return;
+  timerInterval = setInterval(() => {
+    time++;
+    const m = String(Math.floor(time/60)).padStart(2,'0');
+    const s = String(time%60).padStart(2,'0');
+    document.getElementById('typing-timer').textContent = m+':'+s;
+  }, 1000);
+}
+
+function finishChapter() {
+  isFinished = true;
+  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+  const total = correctCount + wrongCount;
+  const acc = total > 0 ? Math.round(correctCount/total*100) : 0;
+  const mins = time / 60;
+  const wpm = mins > 0 ? Math.round(wordCount/mins) : 0;
+  const m = String(Math.floor(time/60)).padStart(2,'0');
+  const s = String(time%60).padStart(2,'0');
+
+  document.getElementById('result-sub').textContent = `${currentDict.name} · 第 ${currentChapter+1} 章`;
+  document.getElementById('result-time').textContent = m+':'+s;
+  document.getElementById('result-accuracy').textContent = acc + '%';
+  document.getElementById('result-wpm').textContent = wpm;
+  document.getElementById('result-perfect').textContent = `${perfectWords}/${words.length}`;
+  document.getElementById('result-screen').classList.remove('hidden');
+}
+
+function nextChapter() {
+  currentChapter++;
+  wordIndex = 0; isFinished = false; resetStats();
+  setupWord(0);
+}
+
+function reviewChapter() {
+  wordIndex = 0; isFinished = false; resetStats();
+  setupWord(0);
+}
+
+function playSound() {
+  const w = words[wordIndex];
+  if (!w) return;
+  const audio = new Audio(`https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(w.name)}&type=2`);
+  audio.play().catch(()=>{});
+}
+
+// ============ KEYBOARD ============
+const kbRows = [
+  ['q','w','e','r','t','y','u','i','o','p'],
+  ['a','s','d','f','g','h','j','k','l'],
+  ['z','x','c','v','b','n','m']
+];
+
+function renderKeyboard() {
+  const el = document.getElementById('keyboard');
+  let html = kbRows.map(row =>
+    `<div class="kb-row">${row.map(k =>
+      `<div class="key" id="key-${k}" data-key="${k}">${k}</div>`
+    ).join('')}</div>`
+  ).join('');
+  html += `<div class="kb-row kb-row-bottom"><div class="key key-space" data-key=" ">空格</div></div>`;
+  el.innerHTML = html;
+
+  // Touch support
+  el.querySelectorAll('.key').forEach(k => {
+    k.addEventListener('pointerdown', () => k.classList.add('pressed'));
+    k.addEventListener('pointerup', () => { k.classList.remove('pressed'); handleVirtualKey(k.dataset.key); });
+    k.addEventListener('pointerleave', () => k.classList.remove('pressed'));
+  });
+}
+
+function handleVirtualKey(key) {
+  if (!key || currentTab !== 'typing' || isFinished || hasWrong) return;
+  document.dispatchEvent(new KeyboardEvent('keydown', { key }));
+}
+
+function updateKeyHint() {
+  document.querySelectorAll('.key').forEach(k => k.classList.remove('hint'));
+  if (currentTab !== 'typing' || isFinished) return;
+  const w = words[wordIndex];
+  if (!w) return;
+  const nextChar = w.name[inputWord.length];
+  if (nextChar) {
+    const el = document.getElementById('key-' + nextChar.toLowerCase());
+    if (el) el.classList.add('hint');
+  }
+}
+
+function flashKey(key, type) {
+  const el = document.getElementById('key-' + key.toLowerCase());
+  if (!el) return;
+  el.classList.remove('hint');
+  el.classList.add(type === 'correct' ? 'correct-flash' : 'wrong-flash');
+  setTimeout(() => {
+    el.classList.remove('correct-flash', 'wrong-flash');
+    updateKeyHint();
+  }, 300);
+}
+
+// ============ ERROR BOOK ============
+let errorWords = [
+  { word:'accommodation', dict:'CET-6', count:12 },
+  { word:'bureaucracy', dict:'考研', count:9 },
+  { word:'entrepreneur', dict:'IELTS', count:7 },
+  { word:'phenomenon', dict:'CET-4', count:6 },
+  { word:'surveillance', dict:'GRE', count:5 },
+  { word:'juxtaposition', dict:'GRE', count:4 },
+  { word:'pragmatic', dict:'TOEFL', count:4 },
+  { word:'meticulous', dict:'IELTS', count:3 },
+];
+let errorSort = 'desc';
+
+function toggleSort() {
+  errorSort = errorSort === 'desc' ? 'asc' : 'desc';
+  document.querySelector('.sort-btn').textContent = errorSort === 'desc' ? '↓ 错误次数' : '↑ 错误次数';
+  renderErrorList();
+}
+
+function renderErrorList() {
+  let list = [...errorWords];
+  const kw = document.getElementById('error-search')?.value?.toLowerCase() || '';
+  if (kw) list = list.filter(w => w.word.includes(kw));
+  list.sort((a,b) => errorSort === 'desc' ? b.count - a.count : a.count - b.count);
+
+  if (list.length === 0) {
+    document.getElementById('error-list').innerHTML = '<div class="empty-state"><span class="empty-icon">📝</span><span style="margin-top:8px">暂无错词记录</span></div>';
+    return;
+  }
+
+  document.getElementById('error-list').innerHTML = list.map(w =>
+    `<div class="error-item">
+      <div><div class="error-word">${w.word}</div><div class="error-dict">${w.dict}</div></div>
+      <div class="error-badge">${w.count}</div>
+    </div>`
+  ).join('');
+}
+
+// ============ HEATMAP (in settings) ============
+function generateHeatmapData() {
+  const data = [];
+  const today = new Date();
+  for (let w = 11; w >= 0; w--) {
+    const week = [];
+    for (let d = 0; d < 7; d++) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - (w * 7 + (6 - d)));
+      // Simulate activity data
+      const dayOfWeek = date.getDay();
+      const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+      const rand = Math.random();
+      let level = 0;
+      if (rand > 0.3) level = 1;
+      if (rand > 0.5) level = 2;
+      if (rand > 0.7) level = 3;
+      if (rand > 0.85) level = 4;
+      // More recent days have higher activity
+      if (w < 3) level = Math.min(4, level + 1);
+      // Weekends slightly less
+      if (isWeekend && level > 0) level--;
+      week.push(Math.max(0, level));
+    }
+    data.push(week);
+  }
+  return data;
+}
+
+function showAnalysis() {
+  document.getElementById('analysis-page').classList.remove('hidden');
+  const heatData = generateHeatmapData();
+  const totalWords = wordCount * 20 + wordIndex;
+  const totalChapters = wordCount;
+  const avgAcc = (correctCount + wrongCount) > 0 ? Math.round(correctCount / (correctCount + wrongCount) * 100) : 0;
+
+  let heatHtml = '<div class="heatmap-title">最近 12 周学习活跃度</div><div class="heatmap">';
+  heatData.forEach(week => {
+    heatHtml += '<div class="heatmap-week">';
+    week.forEach(level => {
+      heatHtml += `<div class="heat-cell heat-${level}"></div>`;
+    });
+    heatHtml += '</div>';
+  });
+  heatHtml += '</div><div class="heatmap-legend"><span class="legend-label">少</span>';
+  for (let i = 0; i < 5; i++) heatHtml += `<div class="legend-cell heat-${i}"></div>`;
+  heatHtml += '<span class="legend-label">多</span></div>';
+
+  // Daily trend for last 7 days
+  let trendHtml = '<div class="heatmap-title" style="margin-top:20px">最近 7 天趋势</div>';
+  trendHtml += '<div style="display:flex;flex-direction:column;gap:8px">';
+  const dayNames = ['周日','周一','周二','周三','周四','周五','周六'];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    const wCount = Math.floor(Math.random() * 30) + (i < 3 ? 15 : 5);
+    const pct = Math.min(100, Math.floor(Math.random() * 30) + 70);
+    trendHtml += `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--bg-card);border-radius:8px;border:1px solid var(--border)">
+      <span style="font-size:13px">${d.getMonth()+1}/${d.getDate()} ${dayNames[d.getDay()]}</span>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span style="font-size:12px;color:var(--text-muted)">${wCount} 词</span>
+        <span style="font-size:12px;color:var(--accent);font-weight:600">${pct}%</span>
+      </div>
+    </div>`;
+  }
+  trendHtml += '</div>';
+
+  document.getElementById('analysis-content').innerHTML = `
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-card-val">${totalWords}</div><div class="stat-card-label">总练习单词</div></div>
+      <div class="stat-card"><div class="stat-card-val">${totalChapters}</div><div class="stat-card-label">完成章节</div></div>
+      <div class="stat-card"><div class="stat-card-val">${avgAcc}%</div><div class="stat-card-label">平均正确率</div></div>
+      <div class="stat-card"><div class="stat-card-val">${Math.floor(time/60)}m</div><div class="stat-card-label">总练习时长</div></div>
+    </div>
+    <div class="heatmap-section">${heatHtml}</div>
+    <div class="heatmap-section">${trendHtml}</div>
+  `;
+}
+
+function closeAnalysis() {
+  document.getElementById('analysis-page').classList.add('hidden');
+}
+
+// ============ SETTINGS LOGIC ============
+const settings = {
+  pron: true, pronType: 0, rate: 2, transRead: false,
+  keySound: true, hintSound: true,
+  phonetic: true, prevNext: true, fontSize: 1,
+  darkMode: true, ignoreCase: true, random: false, dictation: false, loop: 0
+};
+
+const fontSizeMap = [20, 28, 36, 44];
+const rateMap = [0.5, 0.75, 1, 1.25, 1.5];
+const loopMap = [1, 3, 5, 999999];
+
+function toggleSetting(key) {
+  settings[key] = !settings[key];
+  const el = document.getElementById('toggle-' + key);
+  if (el) el.classList.toggle('on');
+
+  // Apply side effects
+  if (key === 'darkMode') applyTheme();
+  if (key === 'phonetic') {
+    const phEl = document.querySelector('.phonetic-row');
+    if (phEl) phEl.style.display = settings.phonetic ? 'flex' : 'none';
+  }
+  if (key === 'prevNext') {
+    const prevEl = document.getElementById('prev-word');
+    const nextEl = document.getElementById('next-word');
+    if (prevEl) prevEl.style.display = settings.prevNext ? 'block' : 'none';
+    if (nextEl) nextEl.style.display = settings.prevNext ? 'block' : 'none';
+  }
+}
+
+function cycleSetting(key, options) {
+  const valKeys = { pronType: 'pronType', rate: 'rate', fontSize: 'fontSize', loop: 'loop' };
+  const current = settings[valKeys[key]];
+  settings[valKeys[key]] = (current + 1) % options.length;
+  document.getElementById('val-' + key).textContent = options[settings[valKeys[key]]] + ' ›';
+
+  // Apply font size
+  if (key === 'fontSize') {
+    const size = fontSizeMap[settings.fontSize];
+    document.querySelectorAll('.letter-char').forEach(el => el.style.fontSize = size + 'px');
+  }
+}
+
+function applyTheme() {
+  const root = document.documentElement;
+  if (settings.darkMode) {
+    root.style.setProperty('--bg-primary', '#0f0f23');
+    root.style.setProperty('--bg-secondary', '#1a1a2e');
+    root.style.setProperty('--bg-tertiary', '#16213e');
+    root.style.setProperty('--bg-card', '#1e1e3a');
+    root.style.setProperty('--text-primary', '#e2e8f0');
+    root.style.setProperty('--text-secondary', '#a0aec0');
+    root.style.setProperty('--text-muted', '#718096');
+    root.style.setProperty('--border', 'rgba(255,255,255,0.08)');
+    document.body.style.background = '#111';
+  } else {
+    root.style.setProperty('--bg-primary', '#f7f8fc');
+    root.style.setProperty('--bg-secondary', '#ffffff');
+    root.style.setProperty('--bg-tertiary', '#edf0f7');
+    root.style.setProperty('--bg-card', '#ffffff');
+    root.style.setProperty('--text-primary', '#1a202c');
+    root.style.setProperty('--text-secondary', '#4a5568');
+    root.style.setProperty('--text-muted', '#a0aec0');
+    root.style.setProperty('--border', 'rgba(0,0,0,0.08)');
+    document.body.style.background = '#e2e8f0';
+  }
+}
+
+// ============ INIT ============
+init();
+</script>
+</body>
+</html>

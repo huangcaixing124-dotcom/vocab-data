@@ -1,0 +1,76 @@
+<!-- 单词显示面板 -->
+<view class="word-panel">
+  <!-- 前一个单词 -->
+  <view class="prev-word" wx:if="{{showPrevNext && prevWord}}">
+    <text class="prev-word-text">{{prevWord.name}}</text>
+  </view>
+
+  <!-- 当前单词主体 -->
+  <view class="word-main">
+    <!-- 音标（可点击拼读） -->
+    <view class="phonetic-row" wx:if="{{showPhonetic && phonetic}}">
+      <view class="phonemes-container">
+        <text class="phoneme-slash">/</text>
+        <text
+          wx:for="{{phonemes}}"
+          wx:key="index"
+          class="phoneme {{item.cssClass}}"
+          data-phoneme="{{item.text}}"
+          bind:tap="onPhonemeTap"
+        >{{item.text}}</text>
+        <text class="phoneme-slash">/</text>
+      </view>
+      <view class="sound-btn" bind:tap="onPlaySound">
+        <text class="sound-icon">🔊</text>
+      </view>
+    </view>
+
+    <!-- 单词字母 -->
+    <view class="letters-container {{isFinished ? 'letters-complete' : ''}}">
+      <view
+        class="letter {{item.state === 'correct' ? 'letter-correct' : ''}} {{item.state === 'wrong' ? 'letter-wrong' : ''}} {{item.isCurrentInput ? 'letter-current' : ''}} {{!item.visible ? 'letter-hidden' : ''}}"
+        wx:for="{{letters}}"
+        wx:key="index"
+      >
+        <text class="letter-char" style="font-size: {{fontSize}}rpx">{{item.char}}</text>
+        <view class="letter-underline" wx:if="{{item.isCurrentInput && !item.isTyped}}"></view>
+      </view>
+    </view>
+
+    <!-- 错误状态提示 -->
+    <view class="wrong-hint" wx:if="{{hasWrong}}">
+      <text class="wrong-hint-text">输入错误，请重新输入</text>
+    </view>
+
+    <!-- 完成状态 -->
+    <view class="finished-check" wx:if="{{isFinished}}">
+      <text class="finished-icon">✓</text>
+    </view>
+  </view>
+
+  <!-- Chinese translation -->
+  <view class="translation" wx:if="{{showTranslation && word && word.trans && word.trans.length > 0}}">
+    <text class="translation-text">{{word.trans[0]}}</text>
+  </view>
+
+  <!-- Example sentence (shown alongside word) -->
+  <view class="sentence-row" wx:if="{{sentenceParts.length > 0}}">
+    <view class="sentence-content">
+      <view class="sentence-en-row">
+        <text class="sentence-quote">"</text>
+        <text wx:for="{{sentenceParts}}" wx:key="index"
+          class="{{item.hl ? 'sentence-hl' : 'sentence-normal'}}">{{item.text}}</text>
+        <text class="sentence-quote">"</text>
+        <view class="sentence-play-btn" bind:tap="onPlaySentence">
+          <text class="sentence-play-icon">🔊</text>
+        </view>
+      </view>
+      <text class="sentence-cn" wx:if="{{sentenceCn}}">{{sentenceCn}}</text>
+    </view>
+  </view>
+
+  <!-- 后一个单词 -->
+  <view class="next-word" wx:if="{{showPrevNext && nextWord}}">
+    <text class="next-word-text">{{nextWord.name}}</text>
+  </view>
+</view>

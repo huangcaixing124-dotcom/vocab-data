@@ -1,0 +1,90 @@
+<!-- 打字练习页 -->
+<view class="typing-page {{themeClass}}">
+  <!-- 顶部信息栏 -->
+  <view class="header-bar">
+    <view class="header-left">
+      <text class="dict-label">{{dictName}}</text>
+      <text class="chapter-label">第 {{chapter + 1}} 章</text>
+    </view>
+    <view class="header-right">
+      <text class="timer">{{formattedTime}}</text>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading" wx:if="{{isLoading}}">
+    <text>{{loadingText}}</text>
+  </view>
+
+  <!-- 练习区域 -->
+  <view class="typing-content" wx:if="{{!isLoading && !isChapterFinished}}">
+    <!-- 进度条 -->
+    <progress-bar current="{{currentIndex}}" total="{{words.length}}" />
+
+    <!-- 单词面板 -->
+    <word-panel
+      word="{{currentWord}}"
+      inputWord="{{inputWord}}"
+      letterStates="{{letterStates}}"
+      hasWrong="{{hasWrong}}"
+      isFinished="{{isWordFinished}}"
+      phoneticType="{{phoneticType}}"
+      showPhonetic="{{showPhonetic}}"
+      showTranslation="{{showTranslation}}"
+      prevWord="{{prevWord}}"
+      nextWord="{{nextWord}}"
+      showPrevNext="{{showPrevNext}}"
+      dictationMode="{{dictationMode}}"
+      randomLetterVisible="{{randomLetterVisible}}"
+      fontSize="{{wordFontSize}}"
+      bind:playSound="onPlaySound"
+      bind:playPhoneme="onPlayPhoneme"
+      bind:playSentence="onPlaySentence"
+    />
+
+    <!-- 统计信息 -->
+    <view class="typing-stats">
+      <view class="stat">
+        <text class="stat-num text-success">{{correctCount}}</text>
+        <text class="stat-name">正确</text>
+      </view>
+      <view class="stat">
+        <text class="stat-num text-danger">{{wrongCount}}</text>
+        <text class="stat-name">错误</text>
+      </view>
+    </view>
+
+    <!-- 跳过按钮 -->
+    <view class="skip-area" wx:if="{{isShowSkip}}">
+      <view class="btn btn-secondary btn-sm" bind:tap="onSkipWord">
+        <text>跳过此词 →</text>
+      </view>
+    </view>
+
+    <!-- 虚拟键盘 -->
+    <virtual-keyboard
+      expectedLetter="{{currentWord.name[inputWord.length] || ''}}"
+      inputLetters="{{inputLetters}}"
+      hasWrong="{{hasWrong}}"
+      disabled="{{isWordFinished || isLoading}}"
+      bind:input="onKeyInput"
+    />
+  </view>
+
+  <!-- 结果页 -->
+  <result-screen
+    visible="{{isChapterFinished}}"
+    time="{{time}}"
+    correctCount="{{correctCount}}"
+    wrongCount="{{wrongCount}}"
+    wordCount="{{wordCount}}"
+    correctWordIndexes="{{correctWordIndexes}}"
+    wordNumber="{{words.length}}"
+    dictName="{{dictName}}"
+    chapter="{{chapter}}"
+    hasNextChapter="{{chapter < dictInfo.chapterCount - 1}}"
+    bind:nextChapter="onNextChapter"
+    bind:reviewChapter="onReviewChapter"
+    bind:backToGallery="onBackToGallery"
+  />
+</view>

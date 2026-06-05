@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "词典选择",
+  "usingComponents": {
+    "dictionary-card": "/components/dictionary-card/dictionary-card"
+  }
+}

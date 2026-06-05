@@ -1,0 +1,182 @@
+/* 统计分析页样式 */
+
+.analysis-page {
+  height: 100vh;
+  background: var(--bg-primary);
+}
+
+.scroll-content {
+  height: 100%;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: block;
+  margin-bottom: 20rpx;
+}
+
+/* 总览 */
+.overview-section {
+  padding: 30rpx;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16rpx;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1rpx solid var(--border);
+  border-radius: 16rpx;
+  padding: 24rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-val {
+  font-size: 36rpx;
+  font-weight: 700;
+}
+
+.stat-val.accent {
+  color: var(--accent-primary);
+}
+
+.stat-label {
+  font-size: 24rpx;
+  color: var(--text-muted);
+  margin-top: 6rpx;
+}
+
+/* 热力图 */
+.heatmap-section {
+  padding: 0 30rpx 30rpx;
+}
+
+.heatmap-container {
+  display: flex;
+  gap: 4rpx;
+  overflow-x: auto;
+  padding-bottom: 10rpx;
+}
+
+.heatmap-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.heatmap-cell {
+  width: 20rpx;
+  height: 20rpx;
+  border-radius: 4rpx;
+  position: relative;
+}
+
+.heatmap-date {
+  display: none;
+  position: absolute;
+  bottom: 24rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 18rpx;
+  white-space: nowrap;
+  background: var(--bg-tertiary);
+  padding: 4rpx 8rpx;
+  border-radius: 4rpx;
+  color: var(--text-primary);
+}
+
+.heatmap-cell:active .heatmap-date {
+  display: block;
+}
+
+/* 热力等级颜色 */
+.heat-level-0 { background: var(--bg-tertiary); }
+.heat-level-1 { background: rgba(102, 126, 234, 0.2); }
+.heat-level-2 { background: rgba(102, 126, 234, 0.4); }
+.heat-level-3 { background: rgba(102, 126, 234, 0.7); }
+.heat-level-4 { background: var(--accent-primary); }
+
+/* 热力图图例 */
+.heatmap-legend {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6rpx;
+  margin-top: 12rpx;
+}
+
+.legend-label {
+  font-size: 20rpx;
+  color: var(--text-muted);
+}
+
+.legend-cell {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 3rpx;
+}
+
+/* 每日趋势 */
+.daily-section {
+  padding: 0 30rpx 30rpx;
+}
+
+.daily-list {
+  background: var(--bg-card);
+  border-radius: 16rpx;
+  border: 1rpx solid var(--border);
+  overflow: hidden;
+}
+
+.daily-item {
+  display: flex;
+  align-items: center;
+  padding: 16rpx 20rpx;
+  border-bottom: 1rpx solid var(--border);
+}
+
+.daily-item:last-child {
+  border-bottom: none;
+}
+
+.daily-date-col {
+  width: 160rpx;
+}
+
+.daily-date {
+  font-size: 24rpx;
+  color: var(--text-muted);
+}
+
+.daily-bar-col {
+  flex: 1;
+  height: 16rpx;
+  background: var(--bg-tertiary);
+  border-radius: 8rpx;
+  overflow: hidden;
+  margin: 0 16rpx;
+}
+
+.daily-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+  border-radius: 8rpx;
+  min-width: 4rpx;
+}
+
+.daily-num-col {
+  width: 120rpx;
+  text-align: right;
+}
+
+.daily-words {
+  font-size: 24rpx;
+  color: var(--text-secondary);
+}

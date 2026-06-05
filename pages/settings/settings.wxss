@@ -1,0 +1,56 @@
+/* 设置页样式 */
+
+.settings-page {
+  height: 100vh;
+  background: var(--bg-primary);
+}
+
+.scroll-content {
+  height: 100%;
+}
+
+.settings-section {
+  margin-bottom: 20rpx;
+  background: var(--bg-secondary);
+  border-bottom: 1rpx solid var(--border);
+  border-top: 1rpx solid var(--border);
+}
+
+.section-title {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: var(--text-muted);
+  padding: 20rpx 30rpx 10rpx;
+  text-transform: uppercase;
+  letter-spacing: 2rpx;
+}
+
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx 30rpx;
+  border-bottom: 1rpx solid var(--border);
+}
+
+.setting-item:last-child {
+  border-bottom: none;
+}
+
+.setting-item:active {
+  background: var(--bg-tertiary);
+}
+
+.setting-label {
+  font-size: 28rpx;
+  color: var(--text-primary);
+}
+
+.setting-value {
+  font-size: 28rpx;
+  color: var(--text-muted);
+}
+
+.setting-danger {
+  /* 淡红色背景 */
+}

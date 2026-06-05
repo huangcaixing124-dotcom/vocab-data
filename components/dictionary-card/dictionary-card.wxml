@@ -1,0 +1,16 @@
+<view class="dict-card" bind:tap="onTap">
+  <view class="dict-card-header">
+    <text class="dict-name">{{dict.name}}</text>
+    <text class="dict-count">{{dict.length}} 词</text>
+  </view>
+  <text class="dict-desc">{{dict.description}}</text>
+  <view class="dict-progress">
+    <view class="progress-bar">
+      <view class="progress-bar-fill" style="width: {{progressPercent}}%;"></view>
+    </view>
+    <text class="dict-progress-text">{{finishedCount}}/{{dict.chapterCount}} 章</text>
+  </view>
+  <view class="dict-tags" wx:if="{{dict.tags}}">
+    <text class="tag" wx:for="{{dict.tags}}" wx:key="*this">{{item}}</text>
+  </view>
+</view>

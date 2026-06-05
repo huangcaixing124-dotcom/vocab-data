@@ -1,0 +1,95 @@
+<!-- 错题本页 -->
+<view class="error-book-page {{themeClass}}">
+  <!-- 搜索和排序 -->
+  <view class="toolbar">
+    <input
+      class="search-input input"
+      placeholder="搜索单词..."
+      value="{{searchKeyword}}"
+      bindinput="onSearchInput"
+      placeholder-class="search-placeholder"
+    />
+    <view class="btn btn-secondary btn-sm" bind:tap="onToggleSort">
+      <text>{{sortOrder === 'desc' ? '↓ 错误次数' : '↑ 错误次数'}}</text>
+    </view>
+  </view>
+
+  <!-- 错词列表 -->
+  <scroll-view class="error-list" scroll-y="true" enhanced="true">
+    <view class="empty-state" wx:if="{{filteredWords.length === 0}}">
+      <text class="empty-icon">📝</text>
+      <text class="mt-md">暂无错词记录</text>
+      <text class="text-muted mt-sm">开始练习后，错误的单词会出现在这里</text>
+    </view>
+
+    <view
+      class="error-item"
+      wx:for="{{filteredWords}}"
+      wx:key="word"
+      data-word="{{item.word}}"
+      data-dict="{{item.dict}}"
+      bind:tap="onViewDetail"
+    >
+      <view class="error-item-left">
+        <text class="error-word">{{item.word}}</text>
+        <text class="error-dict text-muted">{{item.dict}}</text>
+      </view>
+      <view class="error-item-right">
+        <view class="error-badge">
+          <text class="error-badge-num">{{item.errorCount}}</text>
+        </view>
+        <text class="error-arrow text-muted">›</text>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 分页 -->
+  <view class="pagination" wx:if="{{totalPages > 1}}">
+    <view class="btn btn-ghost btn-sm {{currentPage <= 1 ? 'disabled' : ''}}" bind:tap="onPrevPage">
+      <text>上一页</text>
+    </view>
+    <text class="page-info">{{currentPage}} / {{totalPages}}</text>
+    <view class="btn btn-ghost btn-sm {{currentPage >= totalPages ? 'disabled' : ''}}" bind:tap="onNextPage">
+      <text>下一页</text>
+    </view>
+  </view>
+
+  <!-- 详情弹窗 -->
+  <view class="overlay" wx:if="{{showDetail}}" bind:tap="onCloseDetail">
+    <view class="modal" catchtap="">
+      <view class="detail-header">
+        <text class="detail-word">{{detailWord.word}}</text>
+        <view class="sound-btn" data-word="{{detailWord.word}}" bind:tap="onPlayWordSound">
+          <text>🔊</text>
+        </view>
+      </view>
+
+      <view class="detail-stats">
+        <view class="detail-stat">
+          <text class="detail-stat-val text-danger">{{detailWord.errorCount}}</text>
+          <text class="detail-stat-label">总错误次数</text>
+        </view>
+        <view class="detail-stat">
+          <text class="detail-stat-val">{{detailWord.records.length}}</text>
+          <text class="detail-stat-label">练习次数</text>
+        </view>
+      </view>
+
+      <text class="detail-dict text-muted">词典：{{detailWord.dictName}}</text>
+
+      <view class="detail-actions">
+        <view
+          class="btn btn-danger btn-block"
+          data-word="{{detailWord.word}}"
+          data-dict="{{detailWord.dict}}"
+          bind:tap="onDeleteWord"
+        >
+          <text>删除记录</text>
+        </view>
+        <view class="btn btn-secondary btn-block" bind:tap="onCloseDetail">
+          <text>关闭</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

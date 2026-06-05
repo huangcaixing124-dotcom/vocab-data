@@ -1,0 +1,90 @@
+<!-- 词典选择页 -->
+<view class="gallery-page {{themeClass}}">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input-wrap">
+      <input
+        class="search-input input"
+        placeholder="搜索单词或词典..."
+        value="{{searchKeyword}}"
+        bindinput="onSearchInput"
+        placeholder-class="search-placeholder"
+      />
+      <view class="search-clear" wx:if="{{searchKeyword}}" bind:tap="onClearSearch">
+        <text>✕</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 搜索模式 -->
+  <scroll-view class="dict-list" scroll-y="true" enhanced="true" wx:if="{{isSearching}}">
+    <view class="dict-list-inner">
+      <!-- 词典结果 -->
+      <view wx:if="{{searchDictResults.length > 0}}">
+        <text class="section-title">词典</text>
+        <dictionary-card
+          wx:for="{{searchDictResults}}"
+          wx:key="id"
+          dict="{{item}}"
+          bind:select="onDictSelect"
+        />
+      </view>
+
+      <!-- 单词结果 -->
+      <view wx:if="{{searchWordResults.length > 0}}">
+        <text class="section-title">单词</text>
+        <view
+          class="word-result-item"
+          wx:for="{{searchWordResults}}"
+          wx:key="name"
+          data-item="{{item}}"
+          bind:tap="onWordTap"
+        >
+          <view class="word-result-left">
+            <text class="word-result-name">{{item.name}}</text>
+            <text class="word-result-trans">{{item.trans}}</text>
+          </view>
+          <text class="word-result-dict">{{item.dictName}}</text>
+        </view>
+      </view>
+
+      <!-- 无结果 -->
+      <view class="empty-state" wx:if="{{searchDictResults.length === 0 && searchWordResults.length === 0}}">
+        <text>没有找到匹配结果</text>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 正常模式 -->
+  <view wx:else>
+    <!-- 分类标签 -->
+    <scroll-view class="category-scroll" scroll-x="true" enhanced="true" show-scrollbar="{{false}}">
+      <view class="category-tabs">
+        <view
+          class="category-tab {{currentCategory === item ? 'tag-active' : 'tag'}}"
+          wx:for="{{categories}}"
+          wx:key="*this"
+          data-category="{{item}}"
+          bind:tap="onCategoryTap"
+        >
+          <text>{{item}}</text>
+        </view>
+      </view>
+    </scroll-view>
+
+    <!-- 词典列表 -->
+    <scroll-view class="dict-list" scroll-y="true" enhanced="true">
+      <view class="dict-list-inner">
+        <dictionary-card
+          wx:for="{{dictionaries}}"
+          wx:key="id"
+          dict="{{item}}"
+          bind:select="onDictSelect"
+        />
+        <view class="empty-state" wx:if="{{dictionaries.length === 0}}">
+          <text>没有找到匹配的词典</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+</view>

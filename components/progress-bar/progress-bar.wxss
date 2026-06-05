@@ -1,0 +1,20 @@
+.progress-wrapper {
+  padding: 0 30rpx 20rpx;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10rpx;
+}
+
+.progress-text {
+  font-size: 24rpx;
+  color: var(--text-muted);
+}
+
+.progress-percent {
+  font-size: 24rpx;
+  color: var(--accent-primary);
+  font-weight: 600;
+}
