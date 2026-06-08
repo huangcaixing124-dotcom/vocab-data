@@ -72,6 +72,7 @@
 .dict-list {
   flex: 1;
   overflow: hidden;
+  background: var(--bg-primary);
 }
 
 .dict-list-inner {

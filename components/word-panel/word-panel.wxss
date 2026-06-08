@@ -231,6 +231,78 @@
   color: var(--text-secondary);
 }
 
+/* 词根词缀 */
+.word-root {
+  margin-top: 12rpx;
+  padding: 12rpx 20rpx;
+  background: var(--bg-tertiary);
+  border-radius: 10rpx;
+  text-align: center;
+}
+
+.word-root-parts {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8rpx;
+  margin-bottom: 6rpx;
+}
+
+.root-part {
+  font-size: 28rpx;
+  font-weight: 600;
+  padding: 2rpx 8rpx;
+  border-radius: 6rpx;
+}
+
+.root-prefix {
+  color: #339af0;
+  background: rgba(51, 154, 240, 0.1);
+}
+
+.root-root {
+  color: #51cf66;
+  background: rgba(81, 207, 102, 0.1);
+}
+
+.root-suffix {
+  color: #ff922b;
+  background: rgba(255, 146, 43, 0.1);
+}
+
+.root-dot {
+  color: var(--text-muted);
+  font-size: 24rpx;
+}
+
+.word-root-meanings {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4rpx;
+}
+
+.root-meaning {
+  font-size: 20rpx;
+  color: var(--text-muted);
+}
+
+.root-meaning-prefix {
+  color: #339af0;
+}
+
+.root-meaning-root {
+  color: #51cf66;
+}
+
+.root-meaning-suffix {
+  color: #ff922b;
+}
+
+.root-dot-space {
+  width: 20rpx;
+}
+
 /* Example sentence */
 .sentence-row {
   margin-top: 28rpx;

@@ -10,6 +10,7 @@
     </view>
     <text class="dict-progress-text">{{finishedCount}}/{{dict.chapterCount}} 章</text>
   </view>
+  <text class="dict-estimate" wx:if="{{estimatedDays > 0}}">按每日目标，约 {{estimatedDays}} 天学完</text>
   <view class="dict-tags" wx:if="{{dict.tags}}">
     <text class="tag" wx:for="{{dict.tags}}" wx:key="*this">{{item}}</text>
   </view>

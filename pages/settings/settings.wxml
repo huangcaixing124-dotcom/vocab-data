@@ -43,6 +43,18 @@
       </view>
     </view>
 
+    <!-- 学习设置 -->
+    <view class="settings-section">
+      <text class="section-title">学习设置</text>
+      <view class="setting-item">
+        <text class="setting-label">每日目标</text>
+        <view class="daily-goal-input-wrap">
+          <input class="daily-goal-input" type="digit" value="{{dailyGoalTarget}}" bindblur="onDailyGoalBlur" />
+          <text class="daily-goal-unit">词/天</text>
+        </view>
+      </view>
+    </view>
+
     <!-- 显示设置 -->
     <view class="settings-section">
       <text class="section-title">显示设置</text>

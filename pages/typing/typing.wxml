@@ -18,8 +18,19 @@
 
   <!-- 练习区域 -->
   <view class="typing-content" wx:if="{{!isLoading && !isChapterFinished}}">
-    <!-- 进度条 -->
-    <progress-bar current="{{currentIndex}}" total="{{words.length}}" />
+    <!-- 进度信息 -->
+    <view class="progress-info">
+      <text class="progress-chapter">{{dictInfo.length}} 词</text>
+      <text class="progress-estimate">约 {{estimatedDays}} 天学完</text>
+    </view>
+
+    <!-- 每日目标进度 -->
+    <view class="daily-goal">
+      <view class="daily-goal-bar">
+        <view class="daily-goal-fill" style="width: {{todayWordCount / dailyGoalTarget * 100 > 100 ? 100 : todayWordCount / dailyGoalTarget * 100}}%"></view>
+      </view>
+      <text class="daily-goal-text {{dailyGoalReached ? 'daily-goal-reached' : ''}}">今日 {{todayWordCount}}/{{dailyGoalTarget}} 词 {{dailyGoalReached ? '✓ 已完成' : ''}}</text>
+    </view>
 
     <!-- 单词面板 -->
     <word-panel
@@ -36,6 +47,7 @@
       showPrevNext="{{showPrevNext}}"
       dictationMode="{{dictationMode}}"
       randomLetterVisible="{{randomLetterVisible}}"
+      wordRoot="{{currentWordRoot}}"
       fontSize="{{wordFontSize}}"
       bind:playSound="onPlaySound"
       bind:playPhoneme="onPlayPhoneme"

@@ -1,5 +1,5 @@
 <!-- 统计分析页 -->
-<view class="analysis-page">
+<view class="analysis-page {{themeClass}}">
   <scroll-view scroll-y="true" enhanced="true" class="scroll-content">
     <!-- 总览卡片 -->
     <view class="overview-section">
@@ -25,6 +25,36 @@
     </view>
 
     <!-- 热力图 -->
+    <!-- 打卡日历 -->
+    <view class="calendar-section">
+      <view class="calendar-header">
+        <text class="calendar-nav" bind:tap="onPrevMonth">◀</text>
+        <text class="calendar-title">{{calendarYear}}年{{calendarMonth}}月</text>
+        <text class="calendar-nav" bind:tap="onNextMonth">▶</text>
+      </view>
+      <view class="streak-info" wx:if="{{streakDays > 0}}">
+        <text class="streak-text">🔥 连续打卡 {{streakDays}} 天</text>
+      </view>
+      <view class="calendar-weekdays">
+        <text class="weekday">日</text>
+        <text class="weekday">一</text>
+        <text class="weekday">二</text>
+        <text class="weekday">三</text>
+        <text class="weekday">四</text>
+        <text class="weekday">五</text>
+        <text class="weekday">六</text>
+      </view>
+      <view class="calendar-grid">
+        <view
+          class="calendar-day {{item.checked ? 'day-checked' : ''}} {{item.isToday ? 'day-today' : ''}} {{item.day === 0 ? 'day-empty' : ''}}"
+          wx:for="{{calendarDays}}"
+          wx:key="index"
+        >
+          <text wx:if="{{item.day > 0}}">{{item.day}}</text>
+        </view>
+      </view>
+    </view>
+
     <view class="heatmap-section">
       <text class="section-title">练习热力图</text>
       <view class="heatmap-container">

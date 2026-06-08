@@ -42,6 +42,10 @@ Page({
     // 字体大小
     wordFontSize: 36,
 
+    // 每日目标
+    dailyGoalTarget: 20,
+    dailyGoalIndex: 1,
+
     // 主题
     isDarkMode: true,
 
@@ -76,6 +80,13 @@ Page({
       { value: 36, label: '中' },
       { value: 44, label: '大' },
       { value: 52, label: '特大' },
+    ],
+    dailyGoalOptions: [
+      { value: 10, label: '10 词/天' },
+      { value: 20, label: '20 词/天' },
+      { value: 30, label: '30 词/天' },
+      { value: 50, label: '50 词/天' },
+      { value: 100, label: '100 词/天' },
     ],
     rateOptions: [
       { value: 0.5, label: '0.5x' },
@@ -120,6 +131,7 @@ Page({
       showPrevNext: g.isShowPrevAndNextWord,
       loopTimes: loopT,
       wordFontSize: fontS,
+      dailyGoalTarget: g.dailyGoal ? g.dailyGoal.target : 20,
       isDarkMode: g.isDarkMode !== false,
       themeClass: g.isDarkMode === false ? 'theme-light' : '',
       // 计算 picker 索引
@@ -272,12 +284,29 @@ Page({
     })
   },
 
+  onDailyGoalBlur(e) {
+    var val = parseInt(e.detail.value) || 20
+    if (val < 1) val = 1
+    if (val > 500) val = 500
+    this.setData({ dailyGoalTarget: val })
+    app.setAppConfig('dailyGoal', {
+      isOpen: true,
+      target: val,
+    })
+  },
+
   onDarkModeToggle(e) {
     const val = e.detail.value
-    this.setData({ isDarkMode: val })
+    this.setData({
+      isDarkMode: val,
+      themeClass: val ? '' : 'theme-light',
+    })
     app.setAppConfig('isDarkMode', val)
-    // 动态切换主题
-    this._applyTheme(val)
+    app.globalData.isDarkMode = val
+    wx.showToast({
+      title: val ? '已切换深色模式' : '已切换浅色模式',
+      icon: 'none',
+    })
   },
 
   _applyTheme(isDark) {

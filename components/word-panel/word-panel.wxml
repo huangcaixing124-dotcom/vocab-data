@@ -7,7 +7,7 @@
 
   <!-- 当前单词主体 -->
   <view class="word-main">
-    <!-- 音标（可点击拼读） -->
+    <!-- 音标（仅显示，不点击） -->
     <view class="phonetic-row" wx:if="{{showPhonetic && phonetic}}">
       <view class="phonemes-container">
         <text class="phoneme-slash">/</text>
@@ -15,8 +15,6 @@
           wx:for="{{phonemes}}"
           wx:key="index"
           class="phoneme {{item.cssClass}}"
-          data-phoneme="{{item.text}}"
-          bind:tap="onPhonemeTap"
         >{{item.text}}</text>
         <text class="phoneme-slash">/</text>
       </view>
@@ -53,7 +51,24 @@
     <text class="translation-text">{{word.trans[0]}}</text>
   </view>
 
-  <!-- Example sentence (shown alongside word) -->
+  <!-- 词根词缀拆解 -->
+  <view class="word-root" wx:if="{{wordRoot && wordRoot.parts && wordRoot.parts.length > 1}}">
+    <view class="word-root-parts">
+      <block wx:for="{{wordRoot.parts}}" wx:key="index">
+        <text class="root-part root-{{item.type}}">{{item.text}}</text>
+        <text class="root-dot" wx:if="{{index < wordRoot.parts.length - 1}}">·</text>
+      </block>
+    </view>
+    <view class="word-root-meanings">
+      <block wx:for="{{wordRoot.parts}}" wx:key="index">
+        <text class="root-meaning root-meaning-{{item.type}}">{{item.meaning}}</text>
+        <text class="root-dot-space" wx:if="{{index < wordRoot.parts.length - 1}}"></text>
+      </block>
+    </view>
+  </view>
+
+  <!-- Example sentence (hidden - 待后续开发) -->
+  <!--
   <view class="sentence-row" wx:if="{{sentenceParts.length > 0}}">
     <view class="sentence-content">
       <view class="sentence-en-row">
@@ -68,6 +83,7 @@
       <text class="sentence-cn" wx:if="{{sentenceCn}}">{{sentenceCn}}</text>
     </view>
   </view>
+  -->
 
   <!-- 后一个单词 -->
   <view class="next-word" wx:if="{{showPrevNext && nextWord}}">

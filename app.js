@@ -34,6 +34,8 @@ App({
     isShowPrevAndNextWord: DEFAULT_CONFIG.isShowPrevAndNextWord,
     // 是否深色模式
     isDarkMode: false,
+    // 每日目标
+    dailyGoal: { ...DEFAULT_CONFIG.dailyGoal },
   },
 
   onLaunch() {
@@ -56,6 +58,7 @@ App({
     g.wordDictationConfig = getConfig(STORAGE_KEYS.WORD_DICTATION_CONFIG, { ...DEFAULT_CONFIG.wordDictation })
     g.fontSizeConfig = getConfig(STORAGE_KEYS.FONT_SIZE_CONFIG, { ...DEFAULT_CONFIG.fontSize })
     g.loopWordConfig = getConfig(STORAGE_KEYS.LOOP_WORD_CONFIG, { ...DEFAULT_CONFIG.loopWord })
+    g.dailyGoal = getConfig(STORAGE_KEYS.DAILY_GOAL, { ...DEFAULT_CONFIG.dailyGoal })
     g.isIgnoreCase = getConfig(STORAGE_KEYS.IS_IGNORE_CASE, true)
     g.isShowPrevAndNextWord = getConfig(STORAGE_KEYS.IS_SHOW_PREV_NEXT, true)
 
@@ -86,6 +89,7 @@ App({
       wordDictationConfig: STORAGE_KEYS.WORD_DICTATION_CONFIG,
       fontSizeConfig: STORAGE_KEYS.FONT_SIZE_CONFIG,
       loopWordConfig: STORAGE_KEYS.LOOP_WORD_CONFIG,
+      dailyGoal: STORAGE_KEYS.DAILY_GOAL,
       isIgnoreCase: STORAGE_KEYS.IS_IGNORE_CASE,
       isShowPrevAndNextWord: STORAGE_KEYS.IS_SHOW_PREV_NEXT,
       isDarkMode: STORAGE_KEYS.DARK_MODE,

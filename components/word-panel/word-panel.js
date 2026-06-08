@@ -25,6 +25,7 @@ Component({
     dictationMode: { type: String, value: 'none' },
     randomLetterVisible: { type: Array, value: [] },
     fontSize: { type: Number, value: 36 },
+    wordRoot: { type: Object, value: null },
   },
 
   data: {
@@ -108,7 +109,7 @@ Component({
         this.setData({ phonetic: '', phonemes: [] })
         return
       }
-      var phonetic = phoneticType === 'uk' ? word.ukphone : word.usphone
+      var phonetic = (phoneticType === 'uk' && word.ukphone) ? word.ukphone : word.usphone
       var parsed = parsePhonetic(phonetic)
       var phonemes = []
       for (var i = 0; i < parsed.length; i++) {

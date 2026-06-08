@@ -79,6 +79,7 @@
           wx:for="{{dictionaries}}"
           wx:key="id"
           dict="{{item}}"
+          dailyGoal="{{dailyGoalTarget}}"
           bind:select="onDictSelect"
         />
         <view class="empty-state" wx:if="{{dictionaries.length === 0}}">

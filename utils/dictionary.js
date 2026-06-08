@@ -8,9 +8,9 @@ const { CHAPTER_LENGTH } = require('./constants')
 // 词典元数据
 const dictionaries = [
   // ============ 中国考试 ============
-  { id: 'cet4', name: 'CET-4', description: '大学英语四级词库', category: '中国考试', tags: ['大学英语'], url: '/dicts/CET4_T.json', length: 2607, language: 'en', languageCategory: 'en' },
-  { id: 'cet6', name: 'CET-6', description: '大学英语六级词库', category: '中国考试', tags: ['大学英语'], url: '/dicts/CET6_T.json', length: 2345, language: 'en', languageCategory: 'en' },
-  { id: 'kaoyan', name: '考研', description: '研究生英语入学考试词库', category: '中国考试', tags: ['考研'], url: '/dicts/KaoYan_3_T.json', length: 3728, language: 'en', languageCategory: 'en' },
+  { id: 'cet4', name: 'CET-4', description: '大学英语四级词库', category: '中国考试', tags: ['大学英语'], url: '/subpackages/data/CET4_T.json', length: 2607, language: 'en', languageCategory: 'en' },
+  { id: 'cet6', name: 'CET-6', description: '大学英语六级词库', category: '中国考试', tags: ['大学英语'], url: '/subpackages/data/CET6_T.json', length: 2345, language: 'en', languageCategory: 'en' },
+  { id: 'kaoyan', name: '考研', description: '研究生英语入学考试词库', category: '中国考试', tags: ['考研'], url: '/subpackages/data/KaoYan_3_T.json', length: 3728, language: 'en', languageCategory: 'en' },
   { id: 'kaoyan_2024', name: '考研 2024', description: '研究生英语入学考试词库 2024', category: '中国考试', tags: ['考研'], url: '/dicts/KaoYan_2024.json', length: 3731, language: 'en', languageCategory: 'en' },
   { id: 'kaoyanshanguo', name: '考研闪过', description: '考研闪过词汇 2023', category: '中国考试', tags: ['考研'], url: '/dicts/KaoYanShanGuo_2023.json', length: 1771, language: 'en', languageCategory: 'en' },
   { id: 'xinghuoqiaoji_4', name: '四级巧记速记', description: '四级巧记速记', category: '中国考试', tags: ['大学英语'], url: '/dicts/xinghuoqiaoji_4.json', length: 2522, language: 'en', languageCategory: 'en' },
@@ -39,7 +39,7 @@ const dictionaries = [
   { id: 'gmat', name: 'GMAT', description: 'GMAT 词库', category: '国际考试', tags: ['GMAT'], url: '/dicts/GMAT_3_T.json', length: 3037, language: 'en', languageCategory: 'en' },
 
   // ============ 英语词汇 ============
-  { id: 'nce1', name: '新概念英语-1', description: '新概念英语第一册', category: '英语词汇', tags: ['新概念'], url: '/dicts/NCE_1.json', length: 900, language: 'en', languageCategory: 'en' },
+  { id: 'nce1', name: '新概念英语-1', description: '新概念英语第一册', category: '英语词汇', tags: ['新概念'], url: '/subpackages/data/NCE_1.json', length: 900, language: 'en', languageCategory: 'en' },
   { id: 'nce2', name: '新概念英语-2', description: '新概念英语第二册', category: '英语词汇', tags: ['新概念'], url: '/dicts/NCE_2.json', length: 858, language: 'en', languageCategory: 'en' },
   { id: 'nce3', name: '新概念英语-3', description: '新概念英语第三册', category: '英语词汇', tags: ['新概念'], url: '/dicts/NCE_3.json', length: 1052, language: 'en', languageCategory: 'en' },
   { id: 'nce4', name: '新概念英语-4', description: '新概念英语第四册', category: '英语词汇', tags: ['新概念'], url: '/dicts/NCE_4.json', length: 784, language: 'en', languageCategory: 'en' },
@@ -155,13 +155,11 @@ function loadDictionary(dictId) {
     // 2. 从小程序包内读取
     try {
       const fs = wx.getFileSystemManager()
-      const fileName = dict.url.replace('/dicts/', '')
-      // 真机上正确的相对路径是 dicts/xxx.json（无前缀斜杠）
+      // Try multiple path formats for subpackage files
       const paths = [
-        'dicts/' + fileName,         // dicts/CET4_T.json（真机正确格式）
-        dict.url.replace(/^\//, ''), // dicts/CET4_T.json（去掉开头斜杠）
-        dict.url,                    // /dicts/CET4_T.json
-        fileName,                    // CET4_T.json
+        dict.url.replace(/^\//, ''), // subpackages/data/CET4_T.json
+        dict.url,                    // /subpackages/data/CET4_T.json
+        'dicts/' + dict.url.split('/').pop(), // dicts/CET4_T.json (fallback)
       ]
       for (const filePath of paths) {
         try {

@@ -48,5 +48,13 @@
     ]
   },
   "sitemapLocation": "sitemap.json",
-  "style": "v2"
+  "style": "v2",
+  "subpackages": [
+    {
+      "root": "subpackages/data",
+      "pages": [
+        "pages/placeholder/placeholder"
+      ]
+    }
+  ]
 }

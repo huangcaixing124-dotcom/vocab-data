@@ -54,3 +54,26 @@
 .setting-danger {
   /* 淡红色背景 */
 }
+
+/* 每日目标输入 */
+.daily-goal-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.daily-goal-input {
+  width: 120rpx;
+  height: 56rpx;
+  text-align: center;
+  font-size: 28rpx;
+  border: 1rpx solid var(--border);
+  border-radius: 8rpx;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.daily-goal-unit {
+  font-size: 26rpx;
+  color: var(--text-muted);
+}

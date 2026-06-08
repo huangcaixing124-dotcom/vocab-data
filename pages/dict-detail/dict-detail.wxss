@@ -152,3 +152,97 @@
 .review-section {
   padding: 20rpx 30rpx;
 }
+
+/* 掌握度概览 */
+.mastery-summary {
+  margin-top: 16rpx;
+}
+
+.mastery-bar {
+  display: flex;
+  height: 12rpx;
+  background: var(--bg-tertiary);
+  border-radius: 6rpx;
+  overflow: hidden;
+}
+
+.mastery-fill-mastered {
+  background: var(--success);
+  height: 100%;
+}
+
+.mastery-fill-learning {
+  background: var(--accent-primary);
+  height: 100%;
+}
+
+.mastery-legend {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 8rpx;
+}
+
+.legend-item {
+  font-size: 22rpx;
+  color: var(--text-muted);
+}
+
+/* 章节卡片（含掌握度） */
+.chapter-card {
+  display: flex;
+  flex-direction: column;
+  padding: 16rpx 20rpx;
+  margin: 8rpx 0;
+  background: var(--bg-secondary);
+  border-radius: 12rpx;
+  border: 1rpx solid var(--border);
+}
+
+.chapter-card:active {
+  opacity: 0.7;
+}
+
+.chapter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8rpx;
+}
+
+.chapter-num {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.chapter-check {
+  color: var(--success);
+  font-size: 28rpx;
+  font-weight: 700;
+}
+
+.chapter-mastery {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.chapter-mastery-bar {
+  flex: 1;
+  height: 6rpx;
+  background: var(--bg-tertiary);
+  border-radius: 3rpx;
+  overflow: hidden;
+}
+
+.chapter-mastery-fill {
+  height: 100%;
+  background: var(--success);
+  border-radius: 3rpx;
+}
+
+.chapter-mastery-text {
+  font-size: 22rpx;
+  color: var(--text-muted);
+  white-space: nowrap;
+}

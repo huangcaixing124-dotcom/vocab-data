@@ -32,7 +32,7 @@ function saveCache(cache) {
 function loadSentenceData() {
   if (sentenceData !== null) return sentenceData
   try {
-    sentenceData = require('../../dicts/sentence-data.json')
+    sentenceData = require('../../subpackages/data/sentence-data.json')
   } catch (e) {
     sentenceData = {}
   }

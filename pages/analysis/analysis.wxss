@@ -180,3 +180,84 @@
   font-size: 24rpx;
   color: var(--text-secondary);
 }
+
+/* 打卡日历 */
+.calendar-section {
+  padding: 20rpx 30rpx;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.calendar-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.calendar-nav {
+  font-size: 28rpx;
+  color: var(--accent-primary);
+  padding: 8rpx 16rpx;
+}
+
+.streak-info {
+  text-align: center;
+  margin-bottom: 12rpx;
+}
+
+.streak-text {
+  font-size: 26rpx;
+  color: #ff6b35;
+  font-weight: 600;
+}
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 8rpx;
+}
+
+.weekday {
+  text-align: center;
+  font-size: 22rpx;
+  color: var(--text-muted);
+  padding: 8rpx 0;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4rpx;
+}
+
+.calendar-day {
+  text-align: center;
+  padding: 12rpx 0;
+  font-size: 26rpx;
+  color: var(--text-primary);
+  border-radius: 50%;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.day-empty {
+  visibility: hidden;
+}
+
+.day-today {
+  border: 2rpx solid var(--accent-primary);
+  font-weight: 700;
+}
+
+.day-checked {
+  background: var(--success);
+  color: #fff;
+  font-weight: 600;
+}

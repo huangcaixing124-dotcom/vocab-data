@@ -24,6 +24,8 @@ Page({
     isSearching: false,
     searchDictResults: [],
     searchWordResults: [],
+    dailyGoalTarget: 20,
+    refreshKey: 0,
   },
 
   _allWords: null,
@@ -42,10 +44,14 @@ Page({
   },
 
   onShow() {
+    var goal = app.globalData.dailyGoal ? app.globalData.dailyGoal.target : 20
     this.setData({
       currentDictId: app.globalData.currentDictId,
       themeClass: app.globalData.isDarkMode === false ? 'theme-light' : '',
+      dailyGoalTarget: goal,
     })
+    // 强制刷新词典列表（使卡片重新计算预估天数）
+    this._filterDictionaries(this.data.currentCategory)
   },
 
   onCategoryTap(e) {
@@ -138,6 +144,7 @@ Page({
     if (!item) return
     app.setAppConfig('currentDictId', item.dictId)
     app.setAppConfig('currentChapter', Math.floor(item.wordIndex / CHAPTER_LENGTH))
+    app.globalData.currentWordName = item.name
     wx.switchTab({ url: '/pages/typing/typing' })
   },
 

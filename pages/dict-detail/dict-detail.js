@@ -5,8 +5,10 @@
 const app = getApp()
 const { getDictionary } = require('../../utils/dictionary')
 const { getFinishedChapters, getErrorWordRecordsByDict } = require('../../utils/storage')
-const { getErrorWordData } = require('../../utils/record')
+const { getErrorWordData, getWordMastery } = require('../../utils/record')
 const { generateReviewRecord, getActiveReview } = require('../../utils/review')
+const { loadDictionary } = require('../../utils/dictionary')
+const { getReviewDueCount } = require('../../utils/srs')
 
 Page({
   data: {
@@ -38,22 +40,52 @@ Page({
   },
 
   /**
-   * 加载章节列表
+   * 加载章节列表（含掌握度）
    */
   _loadChapters() {
     const { dictInfo, dictId } = this.data
     const finished = getFinishedChapters(dictId)
-    const chapters = []
 
-    for (let i = 0; i < dictInfo.chapterCount; i++) {
-      chapters.push({
-        index: i,
-        label: i + 1,
-        isFinished: finished.has(i),
+    // 加载词典单词以计算掌握度
+    loadDictionary(dictId).then((words) => {
+      const mastery = getWordMastery(dictId, words)
+      const reviewDue = getReviewDueCount(words)
+      const chapters = []
+      const wordsPerChapter = 20
+
+      for (let i = 0; i < dictInfo.chapterCount; i++) {
+        const start = i * wordsPerChapter
+        const end = Math.min(start + wordsPerChapter, words.length)
+        let masteredInChapter = 0
+        for (let j = start; j < end; j++) {
+          if (mastery.words[words[j].name] === 'mastered') masteredInChapter++
+        }
+        chapters.push({
+          index: i,
+          label: i + 1,
+          isFinished: finished.has(i),
+          masteredCount: masteredInChapter,
+          totalCount: end - start,
+          masteryPercent: Math.round(masteredInChapter / (end - start) * 100),
+        })
+      }
+
+      this.setData({
+        chapters,
+        totalMastered: mastery.mastered,
+        totalLearning: mastery.learning,
+        totalUntouched: mastery.untouched,
+        totalWords: mastery.total,
+        reviewDueCount: reviewDue,
       })
-    }
-
-    this.setData({ chapters })
+    }).catch(() => {
+      // 回退：不显示掌握度
+      const chapters = []
+      for (let i = 0; i < dictInfo.chapterCount; i++) {
+        chapters.push({ index: i, label: i + 1, isFinished: finished.has(i) })
+      }
+      this.setData({ chapters })
+    })
   },
 
   /**

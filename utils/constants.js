@@ -29,6 +29,8 @@ const STORAGE_KEYS = {
   IS_SHOW_PREV_NEXT: 'qwerty_is_show_prev_next',
   DARK_MODE: 'qwerty_dark_mode',
   LOOP_WORD_CONFIG: 'qwerty_loop_word_config',
+  DAILY_GOAL: 'qwerty_daily_goal',
+  SRS_DATA: 'qwerty_srs_data',
 }
 
 // 默认配置
@@ -69,6 +71,10 @@ const DEFAULT_CONFIG = {
   },
   loopWord: {
     times: 1, // 1 | 3 | 5 | 8 | 999999
+  },
+  dailyGoal: {
+    isOpen: true,
+    target: 20, // 每日目标单词数
   },
   isIgnoreCase: true,
   isShowPrevAndNextWord: true,

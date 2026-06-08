@@ -53,6 +53,12 @@
   white-space: nowrap;
 }
 
+.dict-estimate {
+  font-size: 22rpx;
+  color: var(--accent-primary);
+  margin-bottom: 10rpx;
+}
+
 .dict-tags {
   display: flex;
   gap: 8rpx;

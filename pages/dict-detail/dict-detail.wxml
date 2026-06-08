@@ -8,6 +8,18 @@
       <text class="meta-item">{{dictInfo.length}} 词</text>
       <text class="meta-item">{{dictInfo.chapterCount}} 章</text>
     </view>
+    <!-- 掌握度概览 -->
+    <view class="mastery-summary" wx:if="{{totalWords > 0}}">
+      <view class="mastery-bar">
+        <view class="mastery-fill-mastered" style="width: {{totalMastered / totalWords * 100}}%"></view>
+        <view class="mastery-fill-learning" style="width: {{totalLearning / totalWords * 100}}%"></view>
+      </view>
+      <view class="mastery-legend">
+        <text class="legend-item">✓ 已掌握 {{totalMastered}}</text>
+        <text class="legend-item">● 学习中 {{totalLearning}}</text>
+        <text class="legend-item">○ 未学习 {{totalUntouched}}</text>
+      </view>
+    </view>
     <view class="btn btn-primary btn-block mt-md" bind:tap="onStartPractice">
       <text>开始练习</text>
     </view>
@@ -22,7 +34,7 @@
       <text>错词 ({{errorWordsCount}})</text>
     </view>
     <view class="tab {{activeTab === 'review' ? 'tab-active' : ''}}" data-tab="review" bind:tap="onTabChange">
-      <text>复习</text>
+      <text>复习{{reviewDueCount > 0 ? ' (' + reviewDueCount + ')' : ''}}</text>
     </view>
   </view>
 
@@ -30,14 +42,22 @@
   <scroll-view class="tab-content" scroll-y="true" wx:if="{{activeTab === 'chapters'}}">
     <view class="chapters-grid">
       <view
-        class="chapter-btn {{item.isFinished ? 'chapter-finished' : ''}}"
+        class="chapter-card {{item.isFinished ? 'chapter-finished' : ''}}"
         wx:for="{{chapters}}"
         wx:key="index"
         data-chapter="{{item.index}}"
         bind:tap="onChapterTap"
       >
-        <text class="chapter-num">{{item.label}}</text>
-        <text class="chapter-status" wx:if="{{item.isFinished}}">✓</text>
+        <view class="chapter-header">
+          <text class="chapter-num">第{{item.label}}章</text>
+          <text class="chapter-check" wx:if="{{item.isFinished}}">✓</text>
+        </view>
+        <view class="chapter-mastery" wx:if="{{item.masteredCount !== undefined}}">
+          <view class="chapter-mastery-bar">
+            <view class="chapter-mastery-fill" style="width: {{item.masteryPercent}}%"></view>
+          </view>
+          <text class="chapter-mastery-text">{{item.masteredCount}}/{{item.totalCount}}</text>
+        </view>
       </view>
     </view>
   </scroll-view>

@@ -196,6 +196,115 @@ function formatDate(date) {
   return `${y}-${m}-${d}`
 }
 
+/**
+ * 获取今日练习数据
+ */
+function getTodayStats() {
+  var today = formatDate(new Date())
+  var chapterRecords = storage.getChapterRecords()
+  var wordRecords = storage.getWordRecords()
+  var todayChapters = 0
+  var todayWords = 0
+  var todayCorrect = 0
+  var todayWrong = 0
+
+  chapterRecords.forEach(function (record) {
+    if (formatDate(new Date(record.timeStamp)) === today) {
+      todayChapters++
+      todayWords += record.wordCount || 0
+      todayCorrect += record.correctCount || 0
+      todayWrong += record.wrongCount || 0
+    }
+  })
+
+  return {
+    date: today,
+    wordCount: todayWords,
+    chapterCount: todayChapters,
+    correct: todayCorrect,
+    wrong: todayWrong,
+  }
+}
+
+/**
+ * 获取单词掌握度（按词典）
+ * @returns {{ mastered: number, learning: number, untouched: number, total: number, words: Object }}
+ */
+function getWordMastery(dictId, allWords) {
+  if (!allWords || allWords.length === 0) {
+    return { mastered: 0, learning: 0, untouched: 0, total: 0, words: {} }
+  }
+
+  var wordRecords = storage.getWordRecords()
+  // 按 word::dict 分组，取最近 3 条
+  var wordHistory = {}
+  wordRecords.forEach(function (r) {
+    if (dictId && r.dict !== dictId) return
+    var key = r.word
+    if (!wordHistory[key]) wordHistory[key] = []
+    wordHistory[key].push(r)
+  })
+
+  var mastered = 0
+  var learning = 0
+  var untouched = 0
+  var masteryMap = {}
+
+  allWords.forEach(function (w) {
+    var records = wordHistory[w.name]
+    if (!records || records.length === 0) {
+      untouched++
+      masteryMap[w.name] = 'untouched'
+      return
+    }
+    // 取最近 3 条判断
+    var recent = records.slice(-3)
+    var allCorrect = recent.every(function (r) { return r.wrongCount === 0 })
+    if (allCorrect && records.length >= 2) {
+      mastered++
+      masteryMap[w.name] = 'mastered'
+    } else {
+      learning++
+      masteryMap[w.name] = 'learning'
+    }
+  })
+
+  return {
+    mastered: mastered,
+    learning: learning,
+    untouched: untouched,
+    total: allWords.length,
+    words: masteryMap,
+  }
+}
+
+/**
+ * 获取连续打卡天数
+ */
+function getStreakDays() {
+  var heatmap = getHeatmapData()
+  var streak = 0
+  var now = new Date()
+  var today = formatDate(now)
+
+  // 从今天往前数
+  if (!heatmap[today] || heatmap[today] === 0) {
+    // 今天没学，从昨天开始数
+    now.setDate(now.getDate() - 1)
+  }
+
+  while (true) {
+    var key = formatDate(now)
+    if (heatmap[key] && heatmap[key] > 0) {
+      streak++
+      now.setDate(now.getDate() - 1)
+    } else {
+      break
+    }
+  }
+  return streak
+}
+
 module.exports = {
   saveWordRecord,
   saveChapterRecord,
@@ -205,4 +314,7 @@ module.exports = {
   getDailyStats,
   getHeatmapData,
   formatDate,
+  getTodayStats,
+  getWordMastery,
+  getStreakDays,
 }

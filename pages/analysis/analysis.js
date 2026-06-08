@@ -1,7 +1,7 @@
 /**
  * 统计分析页
  */
-const { getStatsOverview, getDailyStats, getHeatmapData } = require('../../utils/record')
+const { getStatsOverview, getDailyStats, getHeatmapData, getStreakDays } = require('../../utils/record')
 
 Page({
   data: {
@@ -16,13 +16,22 @@ Page({
     formattedTotalTime: '0分钟',
     dailyStats: [],
     heatmapData: {},
-    // 热力图网格
     heatmapWeeks: [],
     maxHeatmapValue: 1,
+    // 打卡日历
+    calendarYear: 2026,
+    calendarMonth: 6,
+    calendarDays: [],
+    streakDays: 0,
+    themeClass: '',
   },
 
   onShow() {
+    this.setData({
+      themeClass: getApp().globalData.isDarkMode === false ? 'theme-light' : '',
+    })
     this._loadStats()
+    this._initCalendar()
   },
 
   _loadStats() {
@@ -96,5 +105,58 @@ Page({
     const m = String(date.getMonth() + 1).padStart(2, '0')
     const d = String(date.getDate()).padStart(2, '0')
     return `${y}-${m}-${d}`
+  },
+
+  // ============ 打卡日历 ============
+
+  _initCalendar() {
+    const now = new Date()
+    this.setData({
+      calendarYear: now.getFullYear(),
+      calendarMonth: now.getMonth() + 1,
+    })
+    this._buildCalendar()
+  },
+
+  _buildCalendar() {
+    const { calendarYear, calendarMonth, heatmapData } = this.data
+    const firstDay = new Date(calendarYear, calendarMonth - 1, 1).getDay()
+    const daysInMonth = new Date(calendarYear, calendarMonth, 0).getDate()
+    const today = new Date()
+    const todayStr = this._formatDate(today)
+
+    const days = []
+    // 填充月初空白
+    for (let i = 0; i < firstDay; i++) {
+      days.push({ day: 0, checked: false, isToday: false })
+    }
+    // 填充日期
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dateStr = `${calendarYear}-${String(calendarMonth).padStart(2, '0')}-${String(d).padStart(2, '0')}`
+      days.push({
+        day: d,
+        checked: heatmapData[dateStr] > 0,
+        isToday: dateStr === todayStr,
+      })
+    }
+
+    const streakDays = getStreakDays()
+    this.setData({ calendarDays: days, streakDays })
+  },
+
+  onPrevMonth() {
+    let { calendarYear, calendarMonth } = this.data
+    calendarMonth--
+    if (calendarMonth < 1) { calendarMonth = 12; calendarYear-- }
+    this.setData({ calendarYear, calendarMonth })
+    this._buildCalendar()
+  },
+
+  onNextMonth() {
+    let { calendarYear, calendarMonth } = this.data
+    calendarMonth++
+    if (calendarMonth > 12) { calendarMonth = 1; calendarYear++ }
+    this.setData({ calendarYear, calendarMonth })
+    this._buildCalendar()
   },
 })

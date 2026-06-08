@@ -5,7 +5,10 @@
 
 const app = getApp()
 const { getDictionary, getChapterWords, loadDictionary } = require('../../utils/dictionary')
-const { saveWordRecord, saveChapterRecord } = require('../../utils/record')
+const { saveWordRecord, saveChapterRecord, getTodayStats } = require('../../utils/record')
+const { getFinishedChapters } = require('../../utils/storage')
+const { updateSRS } = require('../../utils/srs')
+const { getWordRoot } = require('../../utils/word-roots')
 const { playPronunciation, playKeySound, playWrongSound, playCorrectSound, playTranslation, playPhoneme, playEnglishSentence, destroyAllSounds } = require('../../utils/pronunciation')
 const { WRONG_COUNT_TO_SKIP, WRONG_RESET_DELAY } = require('../../utils/constants')
 
@@ -76,6 +79,14 @@ Page({
     wordFontSize: 36,
     themeClass: '',
 
+    // 每日目标
+    todayWordCount: 0,
+    dailyGoalTarget: 20,
+    dailyGoalReached: false,
+    currentWordRoot: null,
+    totalChapters: 0,
+    estimatedDays: 0,
+
     // 加载状态
     isLoading: true,
     loadingText: '加载词典中...',
@@ -96,6 +107,27 @@ Page({
     const g = app.globalData
     const currentDictId = g.currentDictId || 'cet4'
     const currentChapter = g.currentChapter || 0
+
+    // 从全局配置读取最新每日目标
+    const goal = (g.dailyGoal && g.dailyGoal.target) || 20
+    const todayStats = getTodayStats()
+
+    // 重新计算预估天数
+    var estimatedDays = 0
+    if (this.data.dictInfo) {
+      var learned = getFinishedChapters(currentDictId).size * 20
+      var remaining = Math.max(0, this.data.dictInfo.length - learned)
+      estimatedDays = remaining > 0 ? Math.ceil(remaining / goal) : 0
+    }
+
+    this.setData({
+      todayWordCount: todayStats.wordCount,
+      dailyGoalTarget: goal,
+      dailyGoalReached: todayStats.wordCount >= goal,
+      estimatedDays: estimatedDays,
+      themeClass: g.isDarkMode === false ? 'theme-light' : '',
+    })
+
     // 词典或章节变化时才重新加载
     if (currentDictId !== this.data.dictInfo?.id || currentChapter !== this.data.chapter) {
       this._loadChapter()
@@ -172,12 +204,30 @@ Page({
         words = this._shuffleArray(words)
       }
 
+      // 计算剩余天数：剩余未学单词 / 每日目标
+      var goal = (g.dailyGoal && g.dailyGoal.target) || 20
+      var learned = getFinishedChapters(dictId).size * 20
+      var remaining = Math.max(0, dictInfo.length - learned)
       this.setData({
         words,
         isLoading: false,
+        totalChapters: dictInfo.chapterCount,
+        estimatedDays: remaining > 0 ? Math.ceil(remaining / goal) : 0,
       })
 
-      this._setupCurrentWord(0, words)
+      // 支持从搜索结果跳转到指定单词
+      var startIdx = 0
+      var targetWord = g.currentWordName
+      if (targetWord) {
+        for (var i = 0; i < words.length; i++) {
+          if (words[i].name.toLowerCase() === targetWord.toLowerCase()) {
+            startIdx = i
+            break
+          }
+        }
+        app.globalData.currentWordName = '' // 清除，避免重复跳转
+      }
+      this._setupCurrentWord(startIdx, words)
     } catch (err) {
       console.error('Load dictionary failed:', err)
       const msg = err.message || '词典加载失败'
@@ -221,6 +271,7 @@ Page({
       currentLetterMistakes: {},
       isShowSkip: false,
       randomLetterVisible,
+      currentWordRoot: currentWord ? getWordRoot(currentWord.name) : null,
     })
 
     // 自动播放发音
@@ -404,6 +455,20 @@ Page({
       wordRecordIds: newRecordIds,
       correctWordIndexes: newCorrectIndexes,
     })
+
+    // 更新艾宾浩斯 SRS 数据
+    updateSRS(currentWord.name, currentWrongCount === 0)
+
+    // 更新今日目标进度
+    var todayStats = getTodayStats()
+    var goalConfig = app.globalData.dailyGoal || { isOpen: true, target: 20 }
+    if (goalConfig.isOpen) {
+      this.setData({
+        todayWordCount: todayStats.wordCount,
+        dailyGoalTarget: goalConfig.target,
+        dailyGoalReached: todayStats.wordCount >= goalConfig.target,
+      })
+    }
 
     // 检查循环次数配置
     const loopConfig = app.globalData.loopWordConfig || { times: 1 }
