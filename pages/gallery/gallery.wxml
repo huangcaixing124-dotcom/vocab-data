@@ -72,6 +72,28 @@
       </view>
     </scroll-view>
 
+    <!-- 版本筛选标签（仅课本单词分类显示） -->
+    <scroll-view class="category-scroll publisher-scroll" scroll-x="true" enhanced="true" show-scrollbar="{{false}}" wx:if="{{publisherTags.length > 0}}">
+      <view class="category-tabs">
+        <view
+          class="category-tab {{currentPublisher === '' ? 'tag-active' : 'tag'}}"
+          bind:tap="onPublisherTap"
+          data-publisher=""
+        >
+          <text>全部</text>
+        </view>
+        <view
+          class="category-tab {{currentPublisher === item ? 'tag-active' : 'tag'}}"
+          wx:for="{{publisherTags}}"
+          wx:key="*this"
+          data-publisher="{{item}}"
+          bind:tap="onPublisherTap"
+        >
+          <text>{{item}}</text>
+        </view>
+      </view>
+    </scroll-view>
+
     <!-- 词典列表 -->
     <scroll-view class="dict-list" scroll-y="true" enhanced="true">
       <view class="dict-list-inner">

@@ -1,0 +1,62 @@
+Unit1 文具
+pen /pen/ 钢笔
+pencil /ˈpensl/ 铅笔
+pencil box /ˈpensl bɒks/ 铅笔盒
+ruler /ˈruːlə(r)/ 尺子
+eraser /ɪˈreɪzə(r)/ 橡皮
+crayon /ˈkreɪɒn/ 蜡笔
+bag /bæɡ/ 书包
+book /bʊk/ 书
+Unit2 颜色
+red /red/ 红色；红色的
+yellow /ˈjeləʊ/ 黄色；黄色的
+green /ɡriːn/ 绿色；绿色的
+blue /bluː/ 蓝色；蓝色的
+black /blæk/ 黑色；黑色的
+white /waɪt/ 白色；白色的
+orange /ˈɒrɪndʒ/ 橙色；橙色的
+brown /braʊn/ 棕色；棕色的
+Unit3 身体部位
+head /hed/ 头
+face /feɪs/ 脸
+ear /ɪə(r)/ 耳朵
+eye /aɪ/ 眼睛
+nose /nəʊz/ 鼻子
+mouth /maʊθ/ 嘴
+arm /ɑːm/ 胳膊
+hand /hænd/ 手
+body /ˈbɒdi/ 身体
+leg /leɡ/ 腿
+foot /fʊt/ 脚
+Unit4 动物
+cat /kæt/ 猫
+dog /dɒɡ/ 狗
+monkey /ˈmʌŋki/ 猴子
+panda /ˈpændə/ 大熊猫
+duck /dʌk/ 鸭子
+pig /pɪɡ/ 猪
+bear /beə(r)/ 熊
+elephant /ˈelɪfənt/ 大象
+bird /bɜːd/ 鸟
+tiger /ˈtaɪɡə(r)/ 老虎
+zoo /zuː/ 动物园
+Unit5 食物饮品
+bread /bred/ 面包
+juice /dʒuːs/ 果汁
+egg /eɡ/ 鸡蛋
+milk /mɪlk/ 牛奶
+water /ˈwɔːtə(r)/ 水
+cake /keɪk/ 蛋糕
+fish /fɪʃ/ 鱼
+rice /raɪs/ 米饭
+Unit6 数字 1–10
+one /wʌn/ 一
+two /tuː/ 二
+three /θriː/ 三
+four /fɔː(r)/ 四
+five /faɪv/ 五
+six /sɪks/ 六
+seven /ˈsevən/ 七
+eight /eɪt/ 八
+nine /naɪn/ 九
+ten /ten/ 十

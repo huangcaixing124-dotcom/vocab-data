@@ -144,15 +144,7 @@
       <text class="section-title">关于</text>
       <view class="setting-item">
         <text class="setting-label">版本</text>
-        <text class="setting-value text-muted">1.0.0</text>
-      </view>
-      <view class="setting-item">
-        <text class="setting-label">基于</text>
-        <text class="setting-value text-muted">Qwerty Learner (GPL-3.0)</text>
-      </view>
-      <view class="setting-item">
-        <text class="setting-label">开源地址</text>
-        <text class="setting-value text-muted" style="font-size: 22rpx;">GitHub ›</text>
+        <text class="setting-value text-muted">1.0.1</text>
       </view>
     </view>
   </scroll-view>

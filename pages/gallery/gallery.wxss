@@ -53,6 +53,10 @@
   white-space: nowrap;
 }
 
+.publisher-scroll {
+  background: var(--bg-tertiary);
+}
+
 .category-tabs {
   display: inline-flex;
   padding: 16rpx 30rpx;

@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "打字练习",
+  "navigationBarTitleText": "单词练习",
   "usingComponents": {
     "virtual-keyboard": "/components/virtual-keyboard/virtual-keyboard",
     "word-panel": "/components/word-panel/word-panel",

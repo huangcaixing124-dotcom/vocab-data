@@ -26,6 +26,8 @@ Page({
     searchWordResults: [],
     dailyGoalTarget: 20,
     refreshKey: 0,
+    publisherTags: [],
+    currentPublisher: '',
   },
 
   _allWords: null,
@@ -55,12 +57,39 @@ Page({
   },
 
   onCategoryTap(e) {
-    this.setData({ currentCategory: e.currentTarget.dataset.category, isSearching: false, searchKeyword: '' })
+    this.setData({ currentCategory: e.currentTarget.dataset.category, isSearching: false, searchKeyword: '', currentPublisher: '' })
+    this._filterDictionaries(this.data.currentCategory)
+  },
+
+  onPublisherTap(e) {
+    this.setData({ currentPublisher: e.currentTarget.dataset.publisher })
     this._filterDictionaries(this.data.currentCategory)
   },
 
   _filterDictionaries(category) {
-    this.setData({ dictionaries: getDictionariesByCategory(category) })
+    var dicts = getDictionariesByCategory(category)
+    // 如果是课本单词分类，提取版本标签并筛选
+    if (category === '课本单词') {
+      var tags = {}
+      dicts.forEach(function (d) {
+        if (d.tags) {
+          d.tags.forEach(function (t) {
+            if (t !== '小学' && t !== '初中' && t !== '高中') {
+              tags[t] = true
+            }
+          })
+        }
+      })
+      var currentPublisher = this.data.currentPublisher
+      if (currentPublisher) {
+        dicts = dicts.filter(function (d) {
+          return d.tags && d.tags.indexOf(currentPublisher) >= 0
+        })
+      }
+      this.setData({ publisherTags: Object.keys(tags), dictionaries: dicts })
+    } else {
+      this.setData({ publisherTags: [], dictionaries: dicts })
+    }
   },
 
   /**
@@ -91,14 +120,14 @@ Page({
         done++
         if (done === SEARCHABLE_DICTS.length) {
           that._wordsReady = true
-          console.log('[Gallery] All words loaded:', that._allWords.length)
+          // Words loaded
         }
       }).catch(function (err) {
         console.warn('[Gallery] Failed to load', sd.id, err)
         done++
         if (done === SEARCHABLE_DICTS.length) {
           that._wordsReady = true
-          console.log('[Gallery] Words loaded (partial):', that._allWords.length)
+          // Partial load
         }
       })
     })

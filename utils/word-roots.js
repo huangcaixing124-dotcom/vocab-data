@@ -11,9 +11,7 @@ function loadWordRoots() {
   if (wordRootsData !== null) return wordRootsData
   try {
     wordRootsData = require('../../subpackages/data/word-roots.js')
-    console.log('[WordRoots] Loaded:', Object.keys(wordRootsData).length, 'words')
   } catch (e) {
-    console.log('[WordRoots] require failed:', e.message)
     wordRootsData = {}
   }
   return wordRootsData

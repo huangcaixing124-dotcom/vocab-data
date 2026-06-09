@@ -97,7 +97,6 @@ let keySoundContext = null
 let wrongSoundContext = null
 let correctSoundContext = null
 let translationAudioContext = null
-var sentenceAudioContext = null
 
 /**
  * 播放按键音
@@ -173,7 +172,7 @@ function playTranslation(text) {
  * 销毁所有音效实例
  */
 function destroyAllSounds() {
-  ;[keySoundContext, wrongSoundContext, correctSoundContext, translationAudioContext, sentenceAudioContext].forEach((ctx) => {
+  ;[keySoundContext, wrongSoundContext, correctSoundContext, translationAudioContext].forEach((ctx) => {
     if (ctx) {
       try { ctx.destroy() } catch (e) { /* ignore */ }
     }
@@ -182,35 +181,19 @@ function destroyAllSounds() {
   wrongSoundContext = null
   correctSoundContext = null
   translationAudioContext = null
-  sentenceAudioContext = null
   destroyPronunciation()
 }
 
 // ============ 例句发音 ============
 
 /**
- * Play English sentence pronunciation via Youdao TTS
- * @param {string} sentence - English sentence
+ * Play English sentence pronunciation
+ * Note: Sentence audio feature disabled for production (TTS server not available)
+ * TODO: Re-enable when cloud TTS is deployed
  */
 function playEnglishSentence(sentence) {
-  if (!sentence) return
-  try {
-    if (sentenceAudioContext) {
-      sentenceAudioContext.destroy()
-      sentenceAudioContext = null
-    }
-    sentenceAudioContext = wx.createInnerAudioContext()
-    // Use local TTS server via machine IP (localhost won't work from simulator/phone)
-    var ttsUrl = 'http://192.168.2.44:8765/tts?text=' + encodeURIComponent(sentence)
-    sentenceAudioContext.src = ttsUrl
-    sentenceAudioContext.playbackRate = 0.85
-    sentenceAudioContext.onError(function (err) {
-      console.warn('Sentence audio error:', err)
-    })
-    sentenceAudioContext.play()
-  } catch (e) {
-    // ignore
-  }
+  // Sentence audio not available in production
+  return
 }
 
 // ============ 音素发音（本地音频文件） ============

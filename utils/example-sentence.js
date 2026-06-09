@@ -3,7 +3,7 @@
  * Priority: pre-generated local JSON > runtime API fallback
  */
 
-var CACHE_KEY = 'qwerty_example_cache'
+var CACHE_KEY = 'vocab_example_cache'
 var NONE_MARKER = '__NONE__'
 var memCache = null
 var sentenceData = null

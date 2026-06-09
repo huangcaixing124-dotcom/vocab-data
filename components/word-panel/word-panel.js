@@ -46,11 +46,9 @@ Component({
       this._updatePhonetic()
     },
     'word': function (word) {
-      console.log('[WordPanel] word changed:', word ? word.name : null)
       this._fetchSentence(word)
     },
     'isFinished': function (val) {
-      console.log('[WordPanel] isFinished:', val, 'pendingSentence:', !!this._pendingSentence)
       if (val && this._pendingSentence) {
         this.setData({ sentenceParts: this._pendingSentence.parts || [] })
       }
@@ -134,7 +132,6 @@ Component({
       this._pendingSentence = null
 
       var self = this
-      console.log('[WordPanel] _fetchSentence:', word.name)
       getExampleSentence(word.name).then(function (result) {
         if (self._lastWordName !== word.name) return
         if (result && result.parts && result.parts.length > 0) {

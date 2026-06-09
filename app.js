@@ -1,5 +1,5 @@
 /**
- * Qwerty-Learner 微信小程序
+ * 背单词小程序
  * 全局应用入口 - 状态管理（替代 Jotai）
  */
 
@@ -41,6 +41,23 @@ App({
   onLaunch() {
     // 从本地存储恢复配置
     this._loadConfig()
+  },
+
+  _preloadExamDicts() {
+    var examIds = ['cet4', 'cet6', 'kaoyan', 'nce1']
+    var that = this
+    examIds.forEach(function (id) {
+      try {
+        var data = require('./utils/dict-' + id + '.js')
+        if (data && Array.isArray(data)) {
+          that.globalData['dict_' + id] = data.map(function (w) {
+            return { name: w[0], trans: w[1] ? [w[1]] : [], usphone: w[2] || '', ukphone: '' }
+          })
+        }
+      } catch (e) {
+        // require failed at app level too
+      }
+    })
   },
 
   /**
