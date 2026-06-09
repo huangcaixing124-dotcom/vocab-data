@@ -103,11 +103,11 @@ Component({
     _updatePhonetic() {
       var word = this.data.word
       var phoneticType = this.data.phoneticType
-      if (!word) {
+      if (!word || !word.usphone) {
         this.setData({ phonetic: '', phonemes: [] })
         return
       }
-      var phonetic = (phoneticType === 'uk' && word.ukphone) ? word.ukphone : word.usphone
+      var phonetic = (phoneticType === 'uk' && word.ukphone) ? word.ukphone : (word.usphone || '')
       var parsed = parsePhonetic(phonetic)
       var phonemes = []
       for (var i = 0; i < parsed.length; i++) {

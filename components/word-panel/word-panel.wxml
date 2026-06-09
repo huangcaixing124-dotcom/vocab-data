@@ -1,5 +1,5 @@
 <!-- 单词显示面板 -->
-<view class="word-panel">
+<view class="word-panel" wx:if="{{word && word.name}}">
   <!-- 前一个单词 -->
   <view class="prev-word" wx:if="{{showPrevNext && prevWord}}">
     <text class="prev-word-text">{{prevWord.name}}</text>

@@ -247,6 +247,11 @@ Page({
     }
 
     const currentWord = words[index]
+    if (!currentWord || !currentWord.name) {
+      console.error('Invalid word at index', index, currentWord)
+      this.setData({ isLoading: false, loadingText: '词典数据格式错误' })
+      return
+    }
     const prevWord = index > 0 ? words[index - 1] : null
     const nextWord = index < words.length - 1 ? words[index + 1] : null
 

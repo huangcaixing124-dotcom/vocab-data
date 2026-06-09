@@ -251,7 +251,14 @@ function loadDictionary(dictId) {
             return { name: w[0], trans: w[1] ? [w[1]] : [], usphone: w[2] || '', ukphone: '' }
           })
         } else if (typeof rawData[0] === 'object') {
-          words = rawData
+          words = rawData.map(function (w) {
+            return {
+              name: w.name || '',
+              trans: Array.isArray(w.trans) ? w.trans : (w.trans ? [w.trans] : []),
+              usphone: w.usphone || '',
+              ukphone: w.ukphone || ''
+            }
+          })
         }
         if (words) {
           wx.setStorageSync(cacheKey, words)
@@ -261,21 +268,7 @@ function loadDictionary(dictId) {
       }
     }
 
-    // 3. 课本词典：从 JS 模块读取
-    if (dictId.startsWith('pep_')) {
-      try {
-        var textbookData = require('./textbook-data.js')
-        var rawData = textbookData[dictId]
-        if (rawData && Array.isArray(rawData)) {
-          var words = rawData.map(function (w) {
-            return { name: w[0], trans: w[1] ? [w[1]] : [], usphone: '', ukphone: '' }
-          })
-          wx.setStorageSync(cacheKey, words)
-          resolve(words)
-          return
-        }
-      } catch (e) {}
-    }
+    // 3. 课本词典：已移至 CDN 加载（跳过本地加载）
 
     // 4. 其他词典：从文件系统读取
     try {
@@ -300,7 +293,49 @@ function loadDictionary(dictId) {
       }
     } catch (e) {}
 
-    reject(new Error('词典加载失败'))
+    // 5. CDN 回退：从 GitHub 加载
+    var CDN_BASE = 'https://raw.githubusercontent.com/huangcaixing124-dotcom/vocab-data/master'
+    wx.request({
+      url: CDN_BASE + '/' + dictId + '.json',
+      dataType: 'json',
+      timeout: 15000,
+      success: function (res) {
+        if (res.statusCode === 200 && Array.isArray(res.data) && res.data.length > 0) {
+          // 转换数据格式后缓存
+          var rawData = res.data
+          var words
+          if (typeof rawData[0] === 'string') {
+            words = rawData.map(function (w) {
+              return { name: w[0], trans: w[1] ? [w[1]] : [], usphone: '', ukphone: '' }
+            })
+          } else if (Array.isArray(rawData[0])) {
+            words = rawData.map(function (w) {
+              return { name: w[0], trans: w[1] ? [w[1]] : [], usphone: w[2] || '', ukphone: '' }
+            })
+          } else if (typeof rawData[0] === 'object') {
+            words = rawData.map(function (w) {
+              return {
+                name: w.name || '',
+                trans: Array.isArray(w.trans) ? w.trans : (w.trans ? [w.trans] : []),
+                usphone: w.usphone || '',
+                ukphone: w.ukphone || ''
+              }
+            })
+          }
+          if (words && words.length > 0) {
+            wx.setStorageSync(cacheKey, words)
+            resolve(words)
+          } else {
+            reject(new Error('词典数据格式错误'))
+          }
+        } else {
+          reject(new Error('词典加载失败'))
+        }
+      },
+      fail: function () {
+        reject(new Error('词典加载失败，请检查网络连接'))
+      }
+    })
   })
 }
 
